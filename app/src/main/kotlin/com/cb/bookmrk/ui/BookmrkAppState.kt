@@ -7,6 +7,7 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.cb.bookmrk.feature.home.navigation.homeNavigationRoute
 
 @Composable
 fun rememberBookmrkAppState(
@@ -24,4 +25,10 @@ class BookmrkAppState(
     val currentDestination: NavDestination?
         @Composable get() = navController
             .currentBackStackEntryAsState().value?.destination
+
+    val shouldShowFloatingActionButton: Boolean
+        @Composable get() = currentDestination?.route?.contains(
+            homeNavigationRoute,
+            ignoreCase = true
+        ) == true
 }

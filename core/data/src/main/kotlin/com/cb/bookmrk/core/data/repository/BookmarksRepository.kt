@@ -12,7 +12,7 @@ import java.net.URL
 import javax.inject.Inject
 
 interface BookmarksRepository {
-    suspend fun createBookmark(url: String)
+    suspend fun createBookmark(url: String, collectionId: Long?)
 }
 
 class BookmarksRepositoryImpl @Inject constructor(
@@ -20,12 +20,13 @@ class BookmarksRepositoryImpl @Inject constructor(
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : BookmarksRepository {
 
-    override suspend fun createBookmark(url: String) {
+    override suspend fun createBookmark(url: String, collectionId: Long?) {
         val webContent = extractWebContentFromUrl(url)
         bookmarkDao.insertOrReplaceBookmarkEntity(
             BookmarkEntity(
                 title = webContent.title,
                 imageUrl = webContent.iconUrl,
+                collectionId = collectionId,
                 link = webContent.url
             )
         )

@@ -17,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.cb.bookmrk.core.designsystem.component.BookmrkBackground
-import com.cb.bookmrk.feature.addbookmark.navigation.addBookmarkNavigationRoute
 import com.cb.bookmrk.feature.addbookmark.navigation.navigateToAddBookmark
 import com.cb.bookmrk.navigation.BookmrkNavHost
 
@@ -32,11 +31,7 @@ fun BookmrkApp(
             contentColor = MaterialTheme.colorScheme.onBackground,
             contentWindowInsets = WindowInsets(0, 0, 0, 0),
             floatingActionButton = {
-                if (appState.currentDestination?.route?.contains(
-                        addBookmarkNavigationRoute,
-                        ignoreCase = true
-                    ) == false
-                ) {
+                if (appState.shouldShowFloatingActionButton ) {
                     LargeFloatingActionButton(
                         modifier = Modifier.navigationBarsPadding(),
                         onClick = {
