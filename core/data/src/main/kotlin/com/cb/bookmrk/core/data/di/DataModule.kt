@@ -1,5 +1,7 @@
 package com.cb.bookmrk.core.data.di
 
+import com.cb.bookmrk.core.data.repository.BookmarksRepository
+import com.cb.bookmrk.core.data.repository.BookmarksRepositoryImpl
 import com.cb.bookmrk.core.data.repository.CollectionsRepository
 import com.cb.bookmrk.core.data.repository.CollectionsRepositoryImpl
 import com.cb.bookmrk.core.data.repository.GroupsRepository
@@ -22,4 +24,9 @@ interface DataModule {
     fun bindsCollectionsRepository(
         collectionsRepository: CollectionsRepositoryImpl
     ): CollectionsRepository
+
+    @Binds
+    fun bindsBookmarksRepository(
+        bookmarksRepository: BookmarksRepositoryImpl
+    ): BookmarksRepository
 }

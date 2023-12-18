@@ -1,6 +1,7 @@
 package com.cb.bookmrk.core.database.di
 
 import com.cb.bookmrk.core.database.BookmrkDatabase
+import com.cb.bookmrk.core.database.dao.BookmarkDao
 import com.cb.bookmrk.core.database.dao.CollectionDao
 import com.cb.bookmrk.core.database.dao.GroupDao
 import dagger.Module
@@ -20,4 +21,9 @@ object DaoModule {
     fun providesCollectionDao(
         database: BookmrkDatabase
     ): CollectionDao = database.collectionDao()
+
+    @Provides
+    fun providesBookmarkDao(
+        database: BookmrkDatabase
+    ): BookmarkDao = database.bookmarkDao()
 }

@@ -19,6 +19,7 @@ dependencyResolutionManagement {
 rootProject.name = "Bookmrk"
 include(":app")
 
+include(":core:common")
 include(":core:designsystem")
 include(":core:database")
 include(":core:model")
