@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "5052c125d823c3ebf34f0d1a47f09647",
+    "identityHash": "fbdb3603a9b420523291b3b6c6cc4d07",
     "entities": [
       {
         "tableName": "groups",
@@ -65,7 +65,17 @@
             "id"
           ]
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_collections_group_id",
+            "unique": false,
+            "columnNames": [
+              "group_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_collections_group_id` ON `${TABLE_NAME}` (`group_id`)"
+          }
+        ],
         "foreignKeys": [
           {
             "table": "groups",
@@ -121,7 +131,17 @@
             "id"
           ]
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_bookmarks_collection_id",
+            "unique": false,
+            "columnNames": [
+              "collection_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_bookmarks_collection_id` ON `${TABLE_NAME}` (`collection_id`)"
+          }
+        ],
         "foreignKeys": [
           {
             "table": "collections",
@@ -140,7 +160,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5052c125d823c3ebf34f0d1a47f09647')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fbdb3603a9b420523291b3b6c6cc4d07')"
     ]
   }
 }

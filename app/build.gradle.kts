@@ -39,6 +39,7 @@ dependencies {
     implementation(project(":feature:home"))
     implementation(project(":feature:addeditcollection"))
     implementation(project(":feature:addbookmark"))
+    implementation(project(":feature:bookmarks"))
 
     implementation(project(":core:designsystem"))
 

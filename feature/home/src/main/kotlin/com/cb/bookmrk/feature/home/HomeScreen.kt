@@ -23,6 +23,7 @@ import com.cb.bookmrk.core.ui.GroupRow
 internal fun HomeRoute(
     modifier: Modifier = Modifier,
     onAddGroupClick: (groupId: Long) -> Unit,
+    onCollectionClick: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val groups by viewModel.groups.collectAsState()
@@ -30,7 +31,8 @@ internal fun HomeRoute(
     HomeScreen(
         modifier = modifier,
         groups = groups,
-        onAddGroupClick = onAddGroupClick
+        onAddGroupClick = onAddGroupClick,
+        onCollectionClick = onCollectionClick
     )
 }
 
@@ -39,7 +41,8 @@ internal fun HomeRoute(
 internal fun HomeScreen(
     modifier: Modifier = Modifier,
     groups: List<Group>,
-    onAddGroupClick: (groupId: Long) -> Unit
+    onAddGroupClick: (groupId: Long) -> Unit,
+    onCollectionClick: () -> Unit
 ) {
     Column(
         modifier = modifier.fillMaxSize()
@@ -47,7 +50,11 @@ internal fun HomeScreen(
         BookmrkTopAppBar(text = "Bookmrk")
         LazyColumn {
             item {
-                CollectionRow(icon = Icons.Rounded.Cloud, text = "All bookmarks", onClick = {})
+                CollectionRow(
+                    icon = Icons.Rounded.Cloud,
+                    text = "All bookmarks",
+                    onClick = onCollectionClick
+                )
             }
             item {
                 CollectionRow(icon = Icons.Rounded.Sort, text = "Unsorted", onClick = {})

@@ -6,6 +6,8 @@ import androidx.navigation.compose.NavHost
 import com.cb.bookmrk.core.addeditcollection.navigation.addEditCollectionScreen
 import com.cb.bookmrk.core.addeditcollection.navigation.navigateToAddEditCollection
 import com.cb.bookmrk.feature.addbookmark.navigation.addBookmarkScreen
+import com.cb.bookmrk.feature.bookmarks.navigation.bookmarksScreen
+import com.cb.bookmrk.feature.bookmarks.navigation.navigateToBookmarks
 import com.cb.bookmrk.feature.home.navigation.homeNavigationRoute
 import com.cb.bookmrk.feature.home.navigation.homeScreen
 import com.cb.bookmrk.ui.BookmrkAppState
@@ -24,7 +26,8 @@ fun BookmrkNavHost(
         startDestination = startDestination
     ) {
         homeScreen(
-            onAddGroupClick = navController::navigateToAddEditCollection
+            onAddGroupClick = navController::navigateToAddEditCollection,
+            onCollectionClick = navController::navigateToBookmarks
         )
         addEditCollectionScreen(
             onNavigationClick = navController::popBackStack,
@@ -32,6 +35,9 @@ fun BookmrkNavHost(
         )
         addBookmarkScreen(
             onNavigationClick = navController::popBackStack,
+        )
+        bookmarksScreen(
+            onNavigationClick = navController::popBackStack
         )
     }
 }

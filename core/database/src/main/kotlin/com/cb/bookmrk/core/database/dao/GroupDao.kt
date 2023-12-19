@@ -3,7 +3,6 @@ package com.cb.bookmrk.core.database.dao
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import com.cb.bookmrk.core.database.model.GroupEntity
 import com.cb.bookmrk.core.database.model.PopulatedGroup
 import kotlinx.coroutines.flow.Flow
 

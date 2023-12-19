@@ -3,6 +3,7 @@ package com.cb.bookmrk.core.database.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.cb.bookmrk.core.model.data.Collection
 
@@ -14,7 +15,8 @@ import com.cb.bookmrk.core.model.data.Collection
             parentColumns = ["id"],
             childColumns = ["group_id"]
         )
-    ]
+    ],
+    indices = [Index("group_id")]
 )
 data class CollectionEntity(
     val name: String,

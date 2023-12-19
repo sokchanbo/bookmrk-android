@@ -13,11 +13,13 @@ fun NavController.navigateToHome(navOptions: NavOptions? = null) {
 }
 
 fun NavGraphBuilder.homeScreen(
-    onAddGroupClick: (groupId: Long) -> Unit
+    onAddGroupClick: (groupId: Long) -> Unit,
+    onCollectionClick: () -> Unit
 ) {
     composable(homeNavigationRoute) {
         HomeRoute(
-            onAddGroupClick = onAddGroupClick
+            onAddGroupClick = onAddGroupClick,
+            onCollectionClick = onCollectionClick
         )
     }
 }

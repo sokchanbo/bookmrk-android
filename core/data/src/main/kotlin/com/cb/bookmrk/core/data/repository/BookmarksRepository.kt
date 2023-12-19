@@ -1,17 +1,26 @@
 package com.cb.bookmrk.core.data.repository
 
+import android.util.Log
 import com.cb.bookmrk.core.common.network.BookmrkDispatchers.IO
 import com.cb.bookmrk.core.common.network.Dispatcher
 import com.cb.bookmrk.core.database.dao.BookmarkDao
 import com.cb.bookmrk.core.database.model.BookmarkEntity
+import com.cb.bookmrk.core.database.model.BookmarkWithCollection
+import com.cb.bookmrk.core.database.model.asExternalModel
+import com.cb.bookmrk.core.model.data.Bookmark
 import com.cb.bookmrk.core.model.data.WebContent
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 import java.net.URL
 import javax.inject.Inject
 
 interface BookmarksRepository {
+
+    fun getBookmarks(collectionId: Long?): Flow<List<Bookmark>>
+
     suspend fun createBookmark(url: String, collectionId: Long?)
 }
 
@@ -19,6 +28,13 @@ class BookmarksRepositoryImpl @Inject constructor(
     private val bookmarkDao: BookmarkDao,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher
 ) : BookmarksRepository {
+
+    override fun getBookmarks(collectionId: Long?): Flow<List<Bookmark>> =
+        bookmarkDao.getBookmarkEntities()
+            .map {
+                Log.d("TAG", "getBookmarks: $it")
+                it.map(BookmarkWithCollection::asExternalModel)
+            }
 
     override suspend fun createBookmark(url: String, collectionId: Long?) {
         val webContent = extractWebContentFromUrl(url)
