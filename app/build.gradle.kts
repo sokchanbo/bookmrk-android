@@ -42,6 +42,7 @@ dependencies {
     implementation(project(":feature:bookmarks"))
 
     implementation(project(":core:designsystem"))
+    implementation(project(":core:model"))
 
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.appcompat)

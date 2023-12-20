@@ -13,11 +13,13 @@ fun NavController.navigateToAddBookmark(navOptions: NavOptions? = null) {
 }
 
 fun NavGraphBuilder.addBookmarkScreen(
-    onNavigationClick: () -> Unit
+    onNavigationClick: () -> Unit,
+    onAddedBookmark: () -> Unit
 ) {
     composable(addBookmarkNavigationRoute) {
         AddBookmarkRoute(
-            onNavigationClick = onNavigationClick
+            onNavigationClick = onNavigationClick,
+            onAddedBookmark = onAddedBookmark
         )
     }
 }

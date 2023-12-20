@@ -4,9 +4,12 @@ import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.ForeignKey.Companion.CASCADE
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.cb.bookmrk.core.model.data.Bookmark
+import com.cb.bookmrk.core.model.data.Collection
+import java.util.Date
 
 @Entity(
     tableName = "bookmarks",
@@ -14,7 +17,9 @@ import com.cb.bookmrk.core.model.data.Bookmark
         ForeignKey(
             entity = CollectionEntity::class,
             parentColumns = ["id"],
-            childColumns = ["collection_id"]
+            childColumns = ["collection_id"],
+            onDelete = CASCADE,
+            onUpdate = CASCADE
         )
     ],
     indices = [Index("collection_id")]
@@ -24,6 +29,8 @@ data class BookmarkEntity(
     @ColumnInfo(name = "image_url")
     val imageUrl: String,
     val link: String,
+    @ColumnInfo(name = "created_date")
+    val createdDate: Date,
     @ColumnInfo(name = "collection_id")
     val collectionId: Long?,
     @PrimaryKey(autoGenerate = true)
@@ -31,10 +38,11 @@ data class BookmarkEntity(
 )
 
 data class BookmarkWithCollection(
-    @Embedded()
-    val collection: CollectionEntity?,
     @Embedded
-    val bookmark: BookmarkEntity
+    val bookmark: BookmarkEntity,
+
+    @Embedded
+    val collection: EmbeddedCollection?
 )
 
 fun BookmarkEntity.asExternalModel() = Bookmark(
@@ -42,6 +50,7 @@ fun BookmarkEntity.asExternalModel() = Bookmark(
     title = title,
     imageUrl = imageUrl,
     link = link,
+    createdDate = createdDate,
     collection = null
 )
 
@@ -50,5 +59,12 @@ fun BookmarkWithCollection.asExternalModel() = Bookmark(
     title = bookmark.title,
     link = bookmark.link,
     imageUrl = bookmark.imageUrl,
-    collection = collection?.asExternalModel()
+    createdDate = bookmark.createdDate,
+    collection = collection?.let {
+        Collection(
+            id = bookmark.collectionId!!,
+            name = it.name,
+            isPrivate = it.isPrivate
+        )
+    }
 )

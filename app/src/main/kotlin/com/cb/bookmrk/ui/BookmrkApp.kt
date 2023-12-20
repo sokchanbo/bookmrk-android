@@ -31,7 +31,7 @@ fun BookmrkApp(
             contentColor = MaterialTheme.colorScheme.onBackground,
             contentWindowInsets = WindowInsets(0, 0, 0, 0),
             floatingActionButton = {
-                if (appState.shouldShowFloatingActionButton ) {
+                if (appState.shouldShowFloatingActionButton) {
                     LargeFloatingActionButton(
                         modifier = Modifier.navigationBarsPadding(),
                         onClick = {

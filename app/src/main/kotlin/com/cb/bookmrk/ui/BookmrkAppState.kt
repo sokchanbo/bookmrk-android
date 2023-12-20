@@ -7,6 +7,7 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.cb.bookmrk.feature.bookmarks.navigation.bookmarksNavigationRoute
 import com.cb.bookmrk.feature.home.navigation.homeNavigationRoute
 
 @Composable
@@ -30,5 +31,7 @@ class BookmrkAppState(
         @Composable get() = currentDestination?.route?.contains(
             homeNavigationRoute,
             ignoreCase = true
+        ) == true || currentDestination?.route?.contains(
+            bookmarksNavigationRoute, ignoreCase = true
         ) == true
 }

@@ -23,6 +23,7 @@ import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -51,10 +52,17 @@ import kotlinx.coroutines.launch
 internal fun AddBookmarkRoute(
     modifier: Modifier = Modifier,
     onNavigationClick: () -> Unit,
+    onAddedBookmark: () -> Unit,
     viewModel: AddBookmarkViewModel = hiltViewModel()
 ) {
     val groups by viewModel.groups.collectAsState()
     val addBookmarkUiState by viewModel.addBookmarkUiState.collectAsState()
+
+    LaunchedEffect(addBookmarkUiState) {
+        if (addBookmarkUiState is AddBookmarkUiState.Success) {
+            onAddedBookmark()
+        }
+    }
 
     AddBookmarkScreen(
         modifier = modifier,

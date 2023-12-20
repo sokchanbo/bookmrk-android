@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.Companion.REPLACE
 import androidx.room.Query
+import androidx.room.Transaction
 import com.cb.bookmrk.core.database.model.BookmarkEntity
 import com.cb.bookmrk.core.database.model.BookmarkWithCollection
 import kotlinx.coroutines.flow.Flow
@@ -11,14 +12,31 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface BookmarkDao {
 
+    @Transaction
     @Query(
         value = """
             SELECT * FROM bookmarks
-            INNER JOIN collections 
+            LEFT JOIN collections 
             ON collections.id = bookmarks.collection_id
         """
     )
     fun getBookmarkEntities(): Flow<List<BookmarkWithCollection>>
+
+    @Query(
+        value = """
+            SELECT * FROM bookmarks
+            WHERE collection_id IS NULL
+        """
+    )
+    fun getBookmarkEntitiesWithEmptyCollection(): Flow<List<BookmarkEntity>>
+
+    @Query(
+        value = """
+            SELECT * FROM bookmarks
+            WHERE collection_id = :collectionId
+        """
+    )
+    fun getBookmarkEntitiesByCollectionId(collectionId: Long): Flow<List<BookmarkEntity>>
 
     @Insert(onConflict = REPLACE)
     suspend fun insertOrReplaceBookmarkEntity(bookmark: BookmarkEntity): Long

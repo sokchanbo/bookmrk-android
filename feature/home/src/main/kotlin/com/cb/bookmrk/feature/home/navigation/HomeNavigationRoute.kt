@@ -4,6 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import com.cb.bookmrk.core.model.data.HomeScreenClickType
 import com.cb.bookmrk.feature.home.HomeRoute
 
 const val homeNavigationRoute = "home_route"
@@ -14,7 +15,7 @@ fun NavController.navigateToHome(navOptions: NavOptions? = null) {
 
 fun NavGraphBuilder.homeScreen(
     onAddGroupClick: (groupId: Long) -> Unit,
-    onCollectionClick: () -> Unit
+    onCollectionClick: (HomeScreenClickType, collectionId: Long?) -> Unit
 ) {
     composable(homeNavigationRoute) {
         HomeRoute(
