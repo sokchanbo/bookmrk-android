@@ -1,7 +1,10 @@
 package com.cb.bookmrk.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
@@ -22,6 +25,8 @@ fun rememberBookmrkAppState(
 class BookmrkAppState(
     val navController: NavHostController
 ) {
+    private val _collectionId = mutableStateOf<Long?>(null)
+    val collectionId: State<Long?> get() = _collectionId
 
     val currentDestination: NavDestination?
         @Composable get() = navController
@@ -34,4 +39,8 @@ class BookmrkAppState(
         ) == true || currentDestination?.route?.contains(
             bookmarksNavigationRoute, ignoreCase = true
         ) == true
+
+    fun setNavigationCollectionId(collectionId: Long?) {
+        _collectionId.value = collectionId
+    }
 }

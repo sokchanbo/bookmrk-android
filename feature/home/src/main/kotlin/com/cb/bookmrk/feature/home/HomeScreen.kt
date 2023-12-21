@@ -47,6 +47,11 @@ internal fun HomeScreen(
     onAddGroupClick: (groupId: Long) -> Unit,
     onCollectionClick: (HomeScreenClickType, collectionId: Long?) -> Unit
 ) {
+    /*val isExpandedMap = remember(groups) {
+        List(groups.size) { index -> index to true }
+            .toMutableStateMap()
+    }*/
+
     Column(
         modifier = modifier.fillMaxSize()
     ) {
@@ -67,11 +72,15 @@ internal fun HomeScreen(
                 )
             }
 
-            for (group in groups) {
+            for (i in groups.indices) {
                 item {
-                    GroupRow(group = group, onAddClick = onAddGroupClick)
+                    GroupRow(
+                        group = groups[i],
+                        onAddClick = onAddGroupClick
+                    )
                 }
-                items(group.collections) { collection ->
+
+                items(groups[i].collections) { collection ->
                     CollectionRow(
                         icon = Icons.Outlined.Folder,
                         text = collection.name,

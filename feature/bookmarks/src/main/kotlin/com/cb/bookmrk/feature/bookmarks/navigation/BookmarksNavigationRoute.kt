@@ -26,12 +26,14 @@ fun NavController.navigateToBookmarks(
 
 fun NavGraphBuilder.bookmarksScreen(
     onNavigationClick: () -> Unit,
+    onSetCollectionId: (Long?) -> Unit
 ) {
     composable(
         "$bookmarksNavigationRoute?$homeScreenClickTypeArg={$homeScreenClickTypeArg}&$collectionIdArg={$collectionIdArg}"
     ) {
         BookmarksRoute(
-            onNavigationClick = onNavigationClick
+            onNavigationClick = onNavigationClick,
+            onSetCollectionId = onSetCollectionId
         )
     }
 }

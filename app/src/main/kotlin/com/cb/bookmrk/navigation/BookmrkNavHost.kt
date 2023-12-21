@@ -43,7 +43,8 @@ fun BookmrkNavHost(
             onAddedBookmark = navController::popBackStack
         )
         bookmarksScreen(
-            onNavigationClick = navController::popBackStack
+            onNavigationClick = navController::popBackStack,
+            onSetCollectionId = appState::setNavigationCollectionId
         )
     }
 }

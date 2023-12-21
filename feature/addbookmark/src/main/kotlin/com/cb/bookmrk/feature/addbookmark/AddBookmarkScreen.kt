@@ -56,6 +56,7 @@ internal fun AddBookmarkRoute(
     viewModel: AddBookmarkViewModel = hiltViewModel()
 ) {
     val groups by viewModel.groups.collectAsState()
+    val collection by viewModel.collection.collectAsState()
     val addBookmarkUiState by viewModel.addBookmarkUiState.collectAsState()
 
     LaunchedEffect(addBookmarkUiState) {
@@ -68,6 +69,7 @@ internal fun AddBookmarkRoute(
         modifier = modifier,
         onNavigationClick = onNavigationClick,
         groups = groups,
+        collection = collection,
         onAddBookmarkClick = viewModel::createBookmark,
         addBookmarkUiState = addBookmarkUiState,
     )
@@ -79,6 +81,7 @@ internal fun AddBookmarkScreen(
     modifier: Modifier = Modifier,
     onNavigationClick: () -> Unit,
     groups: List<Group>,
+    collection: Collection?,
     onAddBookmarkClick: (link: String, collectionId: Long?) -> Unit,
     addBookmarkUiState: AddBookmarkUiState?,
 ) {
@@ -86,7 +89,7 @@ internal fun AddBookmarkScreen(
     val sheetState = rememberModalBottomSheetState()
 
     var link by remember { mutableStateOf("") }
-    var selectedCollection by remember { mutableStateOf<Collection?>(null) }
+    var selectedCollection by remember(collection) { mutableStateOf(collection) }
 
     var showChooseCollectionBottomSheet by remember { mutableStateOf(false) }
 
@@ -137,7 +140,7 @@ internal fun AddBookmarkScreen(
                     if (!isValidLink) {
                         Text(text = "Please enter a valid link.")
                     }
-                }
+                },
             )
             BookmrkSelectionOutlinedTextField(
                 value = selectedCollection?.name ?: "",
@@ -148,7 +151,8 @@ internal fun AddBookmarkScreen(
                         contentDescription = null
                     )
                 },
-                placeholder = "Choose collection (Optional)"
+                placeholder = "Choose collection (Optional)",
+                enabled = collection == null
             )
             Spacer(modifier = Modifier.weight(1f))
             BookmrkButton(

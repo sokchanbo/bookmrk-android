@@ -26,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -49,7 +50,8 @@ fun BookmrkOutlinedTextField(
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     leadingIcon: @Composable (() -> Unit)? = null,
     isError: Boolean = false,
-    helperText: @Composable (() -> Unit)? = null
+    helperText: @Composable (() -> Unit)? = null,
+    enabled: Boolean = true
 ) {
     Column(
         modifier = Modifier.animateContentSize(),
@@ -65,7 +67,8 @@ fun BookmrkOutlinedTextField(
             keyboardOptions = keyboardOptions,
             leadingIcon = leadingIcon,
             isError = isError,
-            colors = colors
+            colors = colors,
+            enabled = enabled
         )
 
         CompositionLocalProvider(
@@ -83,24 +86,29 @@ fun BookmrkOutlinedTextField(
 
 @Composable
 fun BookmrkSelectionOutlinedTextField(
+    modifier: Modifier = Modifier,
     value: String,
     onClick: () -> Unit,
     placeholder: String? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = { BookmrkDropdownIcon() },
     shape: Shape = MaterialTheme.shapes.large,
+    enabled: Boolean = true
 ) {
+    val alpha = remember(enabled) {
+        if (enabled) 1f else 0.38f
+    }
+
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = modifier
             .height(OutlinedTextFieldDefaults.MinHeight)
             .border(
                 width = OutlinedTextFieldDefaults.UnfocusedBorderThickness,
                 shape = shape,
-                color = MaterialTheme.colorScheme.outline
+                color = MaterialTheme.colorScheme.outline.copy(alpha = alpha)
             )
             .clip(shape)
-            .clickable {
+            .clickable(enabled = enabled) {
                 onClick()
             },
         verticalAlignment = Alignment.CenterVertically,
@@ -109,7 +117,9 @@ fun BookmrkSelectionOutlinedTextField(
         Spacer(modifier = Modifier)
         if (leadingIcon != null) {
             CompositionLocalProvider(
-                LocalContentColor provides MaterialTheme.colorScheme.onSurfaceVariant
+                LocalContentColor provides MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                    alpha = alpha
+                )
             ) {
                 Box(
                     modifier = Modifier.size(24.dp),
@@ -126,13 +136,19 @@ fun BookmrkSelectionOutlinedTextField(
                 .weight(1f)
                 .padding(start = 4.dp),
             color = if (value.isEmpty()) {
-                MaterialTheme.colorScheme.onSurfaceVariant
+                MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = alpha)
             } else {
-                MaterialTheme.colorScheme.onBackground
+                MaterialTheme.colorScheme.onBackground.copy(alpha = alpha)
             },
             style = MaterialTheme.typography.bodyLarge
         )
-        trailingIcon?.invoke()
+        CompositionLocalProvider(
+            LocalContentColor provides MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                alpha = alpha
+            )
+        ) {
+            trailingIcon?.invoke()
+        }
         Spacer(modifier = Modifier)
     }
 }
@@ -143,6 +159,5 @@ fun BookmrkDropdownIcon() {
         imageVector = Icons.Rounded.KeyboardArrowRight,
         contentDescription = null,
         modifier = Modifier.size(24.dp),
-        tint = MaterialTheme.colorScheme.onSurfaceVariant
     )
 }

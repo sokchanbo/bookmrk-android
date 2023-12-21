@@ -14,6 +14,7 @@ import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.cb.bookmrk.core.designsystem.component.BookmrkBackground
@@ -25,6 +26,9 @@ import com.cb.bookmrk.navigation.BookmrkNavHost
 fun BookmrkApp(
     appState: BookmrkAppState = rememberBookmrkAppState()
 ) {
+
+    val collectionId by appState.collectionId
+
     BookmrkBackground {
         Scaffold(
             containerColor = Color.Transparent,
@@ -35,7 +39,7 @@ fun BookmrkApp(
                     LargeFloatingActionButton(
                         modifier = Modifier.navigationBarsPadding(),
                         onClick = {
-                            appState.navController.navigateToAddBookmark()
+                            appState.navController.navigateToAddBookmark(collectionId)
                         }
                     ) {
                         Icon(imageVector = Icons.Rounded.Add, contentDescription = null)

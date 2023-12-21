@@ -28,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -53,10 +54,16 @@ import com.cb.bookmrk.core.ui.R as uiR
 internal fun BookmarksRoute(
     modifier: Modifier = Modifier,
     onNavigationClick: () -> Unit,
+    onSetCollectionId: (Long?) -> Unit,
     viewModel: BookmarksViewModel = hiltViewModel()
 ) {
     val bookmarks by viewModel.bookmarks.collectAsState()
     val collection by viewModel.collection.collectAsState()
+
+    DisposableEffect(Unit) {
+        onSetCollectionId(viewModel.bookmarksArgs.collectionId)
+        onDispose { onSetCollectionId(null) }
+    }
 
     BookmarksScreen(
         modifier = modifier,
@@ -134,7 +141,7 @@ private fun BookmarkRow(
                     contentDescription = null,
                     modifier = Modifier
                         .size(64.dp)
-                        .clip(MaterialTheme.shapes.large)
+                        .clip(MaterialTheme.shapes.large),
                 )
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(text = bookmark.title)
