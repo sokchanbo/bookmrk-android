@@ -91,7 +91,8 @@ fun CollectionRow(
 @Composable
 fun GroupRow(
     group: Group,
-    onAddClick: (groupId: Long) -> Unit
+    onAddClick: (groupId: Long) -> Unit,
+    onEditClick: (groupId: Long) -> Unit
 ) {
     Surface(
         color = Color.Transparent,
@@ -114,7 +115,7 @@ fun GroupRow(
                     }
                 )
                 ClickableIcon(icon = Icons.Rounded.KeyboardArrowRight, onClick = {})
-                ClickableIcon(icon = Icons.Rounded.MoreHoriz, onClick = {})
+                ClickableIcon(icon = Icons.Rounded.MoreHoriz, onClick = { onEditClick(group.id) })
             }
             Divider()
         }

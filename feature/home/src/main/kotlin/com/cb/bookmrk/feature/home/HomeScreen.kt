@@ -26,6 +26,7 @@ import com.cb.bookmrk.core.ui.R as uiR
 internal fun HomeRoute(
     modifier: Modifier = Modifier,
     onAddGroupClick: (groupId: Long) -> Unit,
+    onEditClick: (groupId: Long) -> Unit,
     onCollectionClick: (HomeScreenClickType, collectionId: Long?) -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
@@ -35,6 +36,7 @@ internal fun HomeRoute(
         modifier = modifier,
         groups = groups,
         onAddGroupClick = onAddGroupClick,
+        onEditClick = onEditClick,
         onCollectionClick = onCollectionClick
     )
 }
@@ -45,6 +47,7 @@ internal fun HomeScreen(
     modifier: Modifier = Modifier,
     groups: List<Group>,
     onAddGroupClick: (groupId: Long) -> Unit,
+    onEditClick: (groupId: Long) -> Unit,
     onCollectionClick: (HomeScreenClickType, collectionId: Long?) -> Unit
 ) {
     /*val isExpandedMap = remember(groups) {
@@ -76,7 +79,8 @@ internal fun HomeScreen(
                 item {
                     GroupRow(
                         group = groups[i],
-                        onAddClick = onAddGroupClick
+                        onAddClick = onAddGroupClick,
+                        onEditClick = onEditClick
                     )
                 }
 

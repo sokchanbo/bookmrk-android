@@ -40,6 +40,7 @@ dependencies {
     implementation(project(":feature:addeditcollection"))
     implementation(project(":feature:addbookmark"))
     implementation(project(":feature:bookmarks"))
+    implementation(project(":feature:editgroup"))
 
     implementation(project(":core:designsystem"))
     implementation(project(":core:model"))

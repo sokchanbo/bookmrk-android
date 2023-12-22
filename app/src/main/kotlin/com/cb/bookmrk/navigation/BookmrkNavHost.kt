@@ -8,6 +8,8 @@ import com.cb.bookmrk.core.addeditcollection.navigation.navigateToAddEditCollect
 import com.cb.bookmrk.feature.addbookmark.navigation.addBookmarkScreen
 import com.cb.bookmrk.feature.bookmarks.navigation.bookmarksScreen
 import com.cb.bookmrk.feature.bookmarks.navigation.navigateToBookmarks
+import com.cb.bookmrk.feature.editgroup.navigation.editGroupScreen
+import com.cb.bookmrk.feature.editgroup.navigation.navigateToEditGroup
 import com.cb.bookmrk.feature.home.navigation.homeNavigationRoute
 import com.cb.bookmrk.feature.home.navigation.homeScreen
 import com.cb.bookmrk.ui.BookmrkAppState
@@ -27,6 +29,7 @@ fun BookmrkNavHost(
     ) {
         homeScreen(
             onAddGroupClick = navController::navigateToAddEditCollection,
+            onEditClick = navController::navigateToEditGroup,
             onCollectionClick = { homeScreenClickType, collectionId ->
                 navController.navigateToBookmarks(
                     homeScreenClickType,
@@ -45,6 +48,9 @@ fun BookmrkNavHost(
         bookmarksScreen(
             onNavigationClick = navController::popBackStack,
             onSetCollectionId = appState::setNavigationCollectionId
+        )
+        editGroupScreen(
+            onNavigationClick = navController::popBackStack
         )
     }
 }
