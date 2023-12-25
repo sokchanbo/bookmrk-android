@@ -1,5 +1,6 @@
 package com.cb.bookmrk.feature.editgroup
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -14,20 +15,34 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.cb.bookmrk.core.designsystem.component.BookmrkButton
 import com.cb.bookmrk.core.designsystem.component.BookmrkOutlinedTextField
 import com.cb.bookmrk.core.designsystem.component.BookmrkTopAppBar
+import com.cb.bookmrk.core.model.data.Group
 
 @Composable
 internal fun EditGroupRoute(
     modifier: Modifier = Modifier,
-    onNavigationClick: () -> Unit
+    onNavigationClick: () -> Unit,
+    viewModel: EditGroupViewModel = hiltViewModel()
 ) {
+    val group by viewModel.group.collectAsState()
+
     EditGroupScreen(
         modifier = modifier,
-        onNavigationClick = onNavigationClick
+        onNavigationClick = { title ->
+            viewModel.updateGroup(title = title)
+            onNavigationClick()
+        },
+        group = group
     )
 }
 
@@ -35,52 +50,62 @@ internal fun EditGroupRoute(
 @Composable
 internal fun EditGroupScreen(
     modifier: Modifier = Modifier,
-    onNavigationClick: () -> Unit
+    onNavigationClick: (String) -> Unit,
+    group: Group?
 ) {
+
+    var title by remember(group?.title) {
+        mutableStateOf(group?.title.orEmpty())
+    }
+
+    BackHandler {
+        onNavigationClick(title)
+    }
+
     Column(
         modifier = modifier.fillMaxSize()
     ) {
         BookmrkTopAppBar(
             text = "Group",
             navigationIcon = Icons.Rounded.ArrowBack,
-            onNavigationClick = onNavigationClick
+            onNavigationClick = { onNavigationClick(title) }
         )
-        Column(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-            BookmrkOutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = "",
-                onValueChange = {
-
-                },
-                placeholder = {
-                    Text(text = "Enter title")
-                }
-            )
-
-            Spacer(modifier = Modifier)
-
-            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                BookmrkButton(
+        if (group != null) {
+            Column(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                BookmrkOutlinedTextField(
                     modifier = Modifier.fillMaxWidth(),
-                    text = "Create group",
-                    onClick = { },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.tertiary,
-                        contentColor = MaterialTheme.colorScheme.onTertiary,
-                    )
+                    value = title,
+                    onValueChange = { title = it },
+                    placeholder = {
+                        Text(text = "Enter title")
+                    }
                 )
 
-                TextButton(
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = {},
-                    colors = ButtonDefaults.textButtonColors(
-                        contentColor = MaterialTheme.colorScheme.error
+                Spacer(modifier = Modifier)
+
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    BookmrkButton(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "Create group",
+                        onClick = { },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.tertiary,
+                            contentColor = MaterialTheme.colorScheme.onTertiary,
+                        )
                     )
-                ) {
-                    Text(text = "Remove group")
+
+                    TextButton(
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = {},
+                        colors = ButtonDefaults.textButtonColors(
+                            contentColor = MaterialTheme.colorScheme.error
+                        )
+                    ) {
+                        Text(text = "Remove group")
+                    }
                 }
             }
         }
