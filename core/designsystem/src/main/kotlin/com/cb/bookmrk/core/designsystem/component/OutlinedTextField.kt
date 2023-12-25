@@ -33,6 +33,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -40,6 +41,55 @@ fun BookmrkOutlinedTextField(
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
+    placeholder: @Composable (() -> Unit)? = null,
+    colors: TextFieldColors = OutlinedTextFieldDefaults.colors(),
+    shape: Shape = MaterialTheme.shapes.large,
+    keyboardOptions: KeyboardOptions = KeyboardOptions(
+        capitalization = KeyboardCapitalization.Sentences,
+        imeAction = ImeAction.Next
+    ),
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    leadingIcon: @Composable (() -> Unit)? = null,
+    isError: Boolean = false,
+    helperText: @Composable (() -> Unit)? = null,
+    enabled: Boolean = true
+) {
+    Column(
+        modifier = Modifier.animateContentSize(),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        OutlinedTextField(
+            modifier = modifier,
+            value = value,
+            onValueChange = onValueChange,
+            placeholder = placeholder,
+            shape = shape,
+            keyboardActions = keyboardActions,
+            keyboardOptions = keyboardOptions,
+            leadingIcon = leadingIcon,
+            isError = isError,
+            colors = colors,
+            enabled = enabled
+        )
+
+        CompositionLocalProvider(
+            LocalTextStyle provides MaterialTheme.typography.labelMedium,
+            LocalContentColor provides MaterialTheme.colorScheme.error
+        ) {
+            if (helperText != null && helperText != {}) {
+                Box(Modifier.padding(horizontal = 8.dp)) {
+                    helperText.invoke()
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun BookmrkOutlinedTextField(
+    modifier: Modifier = Modifier,
+    value: TextFieldValue,
+    onValueChange: (TextFieldValue) -> Unit,
     placeholder: @Composable (() -> Unit)? = null,
     colors: TextFieldColors = OutlinedTextFieldDefaults.colors(),
     shape: Shape = MaterialTheme.shapes.large,

@@ -1,5 +1,6 @@
 package com.cb.bookmrk.core.designsystem.component
 
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -41,7 +42,8 @@ fun BookmrkTopAppBar(
     onNavigationClick: () -> Unit,
     colors: TopAppBarColors = TopAppBarDefaults.mediumTopAppBarColors(
         containerColor = Color.Transparent
-    )
+    ),
+    actions: @Composable RowScope.() -> Unit = {}
 ) {
     MediumTopAppBar(
         modifier = modifier,
@@ -54,7 +56,8 @@ fun BookmrkTopAppBar(
             IconButton(onClick = onNavigationClick) {
                 Icon(imageVector = navigationIcon, contentDescription = null)
             }
-        }
+        },
+        actions = actions
     )
 }
 

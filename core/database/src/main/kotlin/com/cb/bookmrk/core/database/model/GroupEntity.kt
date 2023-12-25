@@ -11,6 +11,10 @@ data class GroupEntity(
     var id: Long = 0
 )
 
+data class EmbeddedGroup(
+    val title: String
+)
+
 fun GroupEntity.asExternalModel(): Group =
     Group(
         id = id,

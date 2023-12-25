@@ -17,9 +17,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.Inbox
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.MoreHoriz
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -55,6 +57,7 @@ internal fun BookmarksRoute(
     modifier: Modifier = Modifier,
     onNavigationClick: () -> Unit,
     onSetCollectionId: (Long?) -> Unit,
+    onEditCollectionClick: (collectionId: Long) -> Unit,
     viewModel: BookmarksViewModel = hiltViewModel()
 ) {
     val bookmarks by viewModel.bookmarks.collectAsState()
@@ -70,7 +73,8 @@ internal fun BookmarksRoute(
         homeScreenClickType = viewModel.bookmarksArgs.homeScreenClickType,
         onNavigationClick = onNavigationClick,
         bookmarks = bookmarks,
-        collection = collection
+        collection = collection,
+        onEditCollectionClick = onEditCollectionClick
     )
 }
 
@@ -81,7 +85,8 @@ internal fun BookmarksScreen(
     homeScreenClickType: HomeScreenClickType,
     onNavigationClick: () -> Unit,
     bookmarks: List<Bookmark>,
-    collection: Collection?
+    collection: Collection?,
+    onEditCollectionClick: (collectionId: Long) -> Unit
 ) {
 
     val context = LocalContext.current
@@ -104,7 +109,14 @@ internal fun BookmarksScreen(
             text = toolbarTitle,
             navigationIcon = Icons.Rounded.ArrowBack,
             onNavigationClick = onNavigationClick,
-            scrollBehavior = scrollBehavior
+            scrollBehavior = scrollBehavior,
+            actions = {
+                if (homeScreenClickType == HomeScreenClickType.Collection && collection != null) {
+                    IconButton(onClick = { onEditCollectionClick(collection.id) }) {
+                        Icon(imageVector = Icons.Rounded.MoreHoriz, contentDescription = null)
+                    }
+                }
+            }
         )
         LazyColumn(
             modifier = Modifier

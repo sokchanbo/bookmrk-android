@@ -2,4 +2,6 @@
 <resources>
     <string name="all_bookmarks">All bookmarks</string>
     <string name="unsorted">Unsorted</string>
+    <string name="collection">Collection</string>
+    <string name="save_changes">Save changes</string>
 </resources>

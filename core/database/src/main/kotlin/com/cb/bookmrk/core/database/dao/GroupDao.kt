@@ -18,7 +18,14 @@ interface GroupDao {
             SELECT * FROM groups
         """
     )
-    fun getGroupEntities(): Flow<List<PopulatedGroup>>
+    fun getGroupsWithCollections(): Flow<List<PopulatedGroup>>
+
+    @Query(
+        value = """
+            SELECT * FROM groups
+        """
+    )
+    fun getGroups(): Flow<List<GroupEntity>>
 
     @Query(
         value = """

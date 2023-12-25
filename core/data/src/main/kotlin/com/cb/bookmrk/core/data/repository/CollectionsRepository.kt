@@ -11,7 +11,12 @@ import javax.inject.Inject
 interface CollectionsRepository {
 
     fun getCollection(collectionId: Long): Flow<Collection?>
+
+    fun getCollectionWithGroup(collectionId: Long): Flow<Collection?>
+
     suspend fun createCollection(name: String, isPrivate: Boolean, groupId: Long)
+
+    suspend fun updateCollection(id: Long, name: String, groupId: Long)
 }
 
 class CollectionsRepositoryImpl @Inject constructor(
@@ -22,9 +27,24 @@ class CollectionsRepositoryImpl @Inject constructor(
         collectionDao.getCollectionEntityById(collectionId)
             .map { it?.asExternalModel() }
 
+    override fun getCollectionWithGroup(collectionId: Long): Flow<Collection?> =
+        collectionDao.getCollectionWithGroupById(collectionId)
+            .map { it?.asExternalModel() }
+
     override suspend fun createCollection(name: String, isPrivate: Boolean, groupId: Long) {
         collectionDao.insertOrReplaceCollectionEntity(
             CollectionEntity(name = name, isPrivate = isPrivate, groupId = groupId)
+        )
+    }
+
+    override suspend fun updateCollection(id: Long, name: String, groupId: Long) {
+        collectionDao.updateCollectionEntity(
+            CollectionEntity(
+                name = name,
+                groupId = groupId,
+                isPrivate = true,
+                id = id
+            )
         )
     }
 }

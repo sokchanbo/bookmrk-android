@@ -16,7 +16,7 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
 
     val groups: StateFlow<List<Group>> =
-        groupsRepository.getGroups()
+        groupsRepository.getGroupsWithCollections()
             .stateIn(
                 viewModelScope,
                 SharingStarted.WhileSubscribed(5_000),

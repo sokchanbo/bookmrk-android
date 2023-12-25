@@ -10,9 +10,17 @@ import com.cb.bookmrk.core.addeditcollection.AddEditCollectionRoute
 const val addEditCollectionNavigationRoute = "add_edit_collection_route"
 
 private const val groupIdArg = "group_id"
+private const val collectionIdArg = "collection_id"
 
-fun NavController.navigateToAddEditCollection(groupId: Long, navOptions: NavOptions? = null) {
-    navigate("$addEditCollectionNavigationRoute/$groupId", navOptions)
+fun NavController.navigateToAddEditCollection(
+    groupId: Long? = null,
+    collectionId: Long? = null,
+    navOptions: NavOptions? = null
+) {
+    navigate(
+        "$addEditCollectionNavigationRoute?$groupIdArg=$groupId&$collectionIdArg=$collectionId",
+        navOptions
+    )
 }
 
 fun NavGraphBuilder.addEditCollectionScreen(
@@ -20,7 +28,7 @@ fun NavGraphBuilder.addEditCollectionScreen(
     onCreatedUpdatedSuccess: () -> Unit
 ) {
     composable(
-        "$addEditCollectionNavigationRoute/{$groupIdArg}"
+        "$addEditCollectionNavigationRoute?$groupIdArg={$groupIdArg}&$collectionIdArg={$collectionIdArg}"
     ) {
         AddEditCollectionRoute(
             onNavigationClick = onNavigationClick,
@@ -29,7 +37,10 @@ fun NavGraphBuilder.addEditCollectionScreen(
     }
 }
 
-internal class AddEditCollectionArgs(val groupId: Long) {
+internal class AddEditCollectionArgs(val groupId: Long?, val collectionId: Long?) {
     constructor(savedStateHandle: SavedStateHandle) :
-            this(savedStateHandle.get<String>(groupIdArg)!!.toLong())
+            this(
+                savedStateHandle.get<String>(groupIdArg)?.toLongOrNull(),
+                savedStateHandle.get<String>(collectionIdArg)?.toLongOrNull()
+            )
 }

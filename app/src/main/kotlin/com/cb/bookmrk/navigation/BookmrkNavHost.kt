@@ -28,7 +28,9 @@ fun BookmrkNavHost(
         startDestination = startDestination
     ) {
         homeScreen(
-            onAddGroupClick = navController::navigateToAddEditCollection,
+            onAddGroupClick = { groupId ->
+                navController.navigateToAddEditCollection(groupId = groupId)
+            },
             onEditClick = navController::navigateToEditGroup,
             onCollectionClick = { homeScreenClickType, collectionId ->
                 navController.navigateToBookmarks(
@@ -47,7 +49,10 @@ fun BookmrkNavHost(
         )
         bookmarksScreen(
             onNavigationClick = navController::popBackStack,
-            onSetCollectionId = appState::setNavigationCollectionId
+            onSetCollectionId = appState::setNavigationCollectionId,
+            onEditCollectionClick = { collectionId ->
+                navController.navigateToAddEditCollection(collectionId = collectionId)
+            }
         )
         editGroupScreen(
             onNavigationClick = navController::popBackStack

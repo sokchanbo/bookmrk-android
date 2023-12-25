@@ -1,12 +1,14 @@
 package com.cb.bookmrk.core.database.model
 
 import androidx.room.ColumnInfo
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.Companion.CASCADE
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.cb.bookmrk.core.model.data.Collection
+import com.cb.bookmrk.core.model.data.Group
 
 @Entity(
     tableName = "collections",
@@ -39,8 +41,22 @@ data class EmbeddedCollection(
     val groupId: Long,
 )
 
+data class CollectionWithGroup(
+    @Embedded
+    val collection: CollectionEntity,
+    @Embedded
+    val group: EmbeddedGroup
+)
+
 fun CollectionEntity.asExternalModel() = Collection(
     id = id,
     name = name,
     isPrivate = isPrivate
+)
+
+fun CollectionWithGroup.asExternalModel() = Collection(
+    id = collection.id,
+    name = collection.name,
+    isPrivate = collection.isPrivate,
+    group = Group(id = collection.groupId, title = group.title)
 )
