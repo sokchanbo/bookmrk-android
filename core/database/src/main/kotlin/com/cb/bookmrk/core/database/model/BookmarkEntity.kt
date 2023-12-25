@@ -33,6 +33,8 @@ data class BookmarkEntity(
     val createdDate: Date,
     @ColumnInfo(name = "collection_id")
     val collectionId: Long?,
+    @ColumnInfo(name = "deleted_date")
+    val deletedDate: Date? = null,
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0
 )

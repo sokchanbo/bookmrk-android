@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "99c951d3af27cbc02ee100a5e22a3372",
+    "identityHash": "ed178351f67192c985f9576bbd090a60",
     "entities": [
       {
         "tableName": "groups",
@@ -92,7 +92,7 @@
       },
       {
         "tableName": "bookmarks",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`title` TEXT NOT NULL, `image_url` TEXT NOT NULL, `link` TEXT NOT NULL, `created_date` INTEGER NOT NULL, `collection_id` INTEGER, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, FOREIGN KEY(`collection_id`) REFERENCES `collections`(`id`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`title` TEXT NOT NULL, `image_url` TEXT NOT NULL, `link` TEXT NOT NULL, `created_date` INTEGER NOT NULL, `collection_id` INTEGER, `deleted_date` INTEGER, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, FOREIGN KEY(`collection_id`) REFERENCES `collections`(`id`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "title",
@@ -121,6 +121,12 @@
           {
             "fieldPath": "collectionId",
             "columnName": "collection_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "deletedDate",
+            "columnName": "deleted_date",
             "affinity": "INTEGER",
             "notNull": false
           },
@@ -166,7 +172,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '99c951d3af27cbc02ee100a5e22a3372')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ed178351f67192c985f9576bbd090a60')"
     ]
   }
 }

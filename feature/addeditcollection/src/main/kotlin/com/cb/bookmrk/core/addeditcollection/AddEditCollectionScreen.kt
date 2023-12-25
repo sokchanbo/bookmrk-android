@@ -15,13 +15,17 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -54,6 +58,7 @@ internal fun AddEditCollectionRoute(
     modifier: Modifier = Modifier,
     onNavigationClick: () -> Unit,
     onCreatedUpdatedSuccess: () -> Unit,
+    onDeletedSuccess: () -> Unit,
     viewModel: AddEditCollectionViewModel = hiltViewModel()
 ) {
 
@@ -73,6 +78,10 @@ internal fun AddEditCollectionRoute(
             }
             onCreatedUpdatedSuccess()
         },
+        onConfirmDeleteClick = {
+            viewModel.deleteCollection()
+            onDeletedSuccess()
+        }
     )
 }
 
@@ -84,6 +93,7 @@ internal fun AddEditCollectionScreen(
     collection: Collection?,
     groups: List<Group>,
     onCreateUpdateClick: (collectionName: String, isPrivate: Boolean, groupId: Long?) -> Unit,
+    onConfirmDeleteClick: () -> Unit
 ) {
 
     val focusRequest = remember { FocusRequester() }
@@ -105,6 +115,7 @@ internal fun AddEditCollectionScreen(
     }
 
     var showGroupModalBottomSheet by remember { mutableStateOf(false) }
+    var showDeleteConfirmationDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         focusRequest.requestFocus()
@@ -121,7 +132,7 @@ internal fun AddEditCollectionScreen(
             onNavigationClick = onNavigationClick,
             actions = {
                 if (collection != null) {
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = { showDeleteConfirmationDialog = true }) {
                         Icon(imageVector = Icons.Outlined.DeleteOutline, contentDescription = null)
                     }
                 }
@@ -142,12 +153,13 @@ internal fun AddEditCollectionScreen(
                 onValueChange = { collectionName = it }
             )
 
-            BookmrkSelectionOutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = selectedGroup?.title.orEmpty(),
-                onClick = { showGroupModalBottomSheet = true }
-            )
-
+            if (collection != null) {
+                BookmrkSelectionOutlinedTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = selectedGroup?.title.orEmpty(),
+                    onClick = { showGroupModalBottomSheet = true }
+                )
+            }
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -181,6 +193,16 @@ internal fun AddEditCollectionScreen(
                     onDismissRequest = { showGroupModalBottomSheet = false },
                     groups = groups,
                     selectedGroup = selectedGroup
+                )
+            }
+
+            if (showDeleteConfirmationDialog) {
+                DeleteConfirmationDialog(
+                    onDismissRequest = { showDeleteConfirmationDialog = false },
+                    onDeleteClick = {
+                        showDeleteConfirmationDialog = false
+                        onConfirmDeleteClick()
+                    }
                 )
             }
         }
@@ -226,4 +248,31 @@ private fun GroupRow(group: Group, isSelected: Boolean) {
             }
         }
     }
+}
+
+@Composable
+private fun DeleteConfirmationDialog(
+    onDismissRequest: () -> Unit,
+    onDeleteClick: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        title = { Text(text = stringResource(R.string.delete_collection)) },
+        text = { Text(text = stringResource(R.string.delete_collection_message)) },
+        confirmButton = {
+            TextButton(
+                onClick = onDeleteClick,
+                colors = ButtonDefaults.textButtonColors(
+                    contentColor = MaterialTheme.colorScheme.error
+                )
+            ) {
+                Text(text = stringResource(uiR.string.delete))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismissRequest) {
+                Text(text = stringResource(uiR.string.cancel))
+            }
+        }
+    )
 }

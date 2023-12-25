@@ -7,6 +7,7 @@ import androidx.room.Query
 import androidx.room.Update
 import com.cb.bookmrk.core.database.model.CollectionEntity
 import com.cb.bookmrk.core.database.model.CollectionWithGroup
+import com.cb.bookmrk.core.database.model.PopulatedCollection
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -23,6 +24,14 @@ interface CollectionDao {
     @Query(
         value = """
             SELECT * FROM collections
+            WHERE collections.id = :id
+        """
+    )
+    fun getCollectionWithBookmarks(id: Long): Flow<PopulatedCollection?>
+
+    @Query(
+        value = """
+            SELECT * FROM collections
             LEFT JOIN groups ON groups.id = collections.group_id
             WHERE collections.id = :id
         """
@@ -34,4 +43,12 @@ interface CollectionDao {
 
     @Update
     suspend fun updateCollectionEntity(collection: CollectionEntity)
+
+    @Query(
+        value = """
+            DELETE FROM collections
+            WHERE collections.id = :id
+        """
+    )
+    suspend fun deleteCollection(id: Long)
 }

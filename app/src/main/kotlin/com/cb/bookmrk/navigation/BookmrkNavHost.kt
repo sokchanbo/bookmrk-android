@@ -41,7 +41,10 @@ fun BookmrkNavHost(
         )
         addEditCollectionScreen(
             onNavigationClick = navController::popBackStack,
-            onCreatedUpdatedSuccess = navController::popBackStack
+            onCreatedUpdatedSuccess = navController::popBackStack,
+            onDeletedSuccess = {
+                navController.popBackStack(homeNavigationRoute, false)
+            }
         )
         addBookmarkScreen(
             onNavigationClick = navController::popBackStack,

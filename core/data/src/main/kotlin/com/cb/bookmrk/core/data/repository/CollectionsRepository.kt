@@ -12,19 +12,27 @@ interface CollectionsRepository {
 
     fun getCollection(collectionId: Long): Flow<Collection?>
 
+    fun getCollectionWithBookmarks(collectionId: Long): Flow<Collection?>
+
     fun getCollectionWithGroup(collectionId: Long): Flow<Collection?>
 
     suspend fun createCollection(name: String, isPrivate: Boolean, groupId: Long)
 
     suspend fun updateCollection(id: Long, name: String, groupId: Long)
+
+    suspend fun deleteCollection(id: Long)
 }
 
 class CollectionsRepositoryImpl @Inject constructor(
-    private val collectionDao: CollectionDao
+    private val collectionDao: CollectionDao,
 ) : CollectionsRepository {
 
     override fun getCollection(collectionId: Long): Flow<Collection?> =
         collectionDao.getCollectionEntityById(collectionId)
+            .map { it?.asExternalModel() }
+
+    override fun getCollectionWithBookmarks(collectionId: Long): Flow<Collection?> =
+        collectionDao.getCollectionWithBookmarks(collectionId)
             .map { it?.asExternalModel() }
 
     override fun getCollectionWithGroup(collectionId: Long): Flow<Collection?> =
@@ -46,5 +54,9 @@ class CollectionsRepositoryImpl @Inject constructor(
                 id = id
             )
         )
+    }
+
+    override suspend fun deleteCollection(id: Long) {
+        collectionDao.deleteCollection(id)
     }
 }

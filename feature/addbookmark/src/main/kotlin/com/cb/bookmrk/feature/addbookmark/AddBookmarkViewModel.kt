@@ -33,7 +33,7 @@ internal class AddBookmarkViewModel @Inject constructor(
         if (addBookmarkArgs.collectionId != null) {
             emptyFlow()
         } else {
-            groupsRepository.getGroups()
+            groupsRepository.getGroupsWithCollections()
         }.stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5_000),

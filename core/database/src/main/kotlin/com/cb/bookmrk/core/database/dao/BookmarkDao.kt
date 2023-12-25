@@ -8,6 +8,7 @@ import androidx.room.Transaction
 import com.cb.bookmrk.core.database.model.BookmarkEntity
 import com.cb.bookmrk.core.database.model.BookmarkWithCollection
 import kotlinx.coroutines.flow.Flow
+import java.util.Date
 
 @Dao
 interface BookmarkDao {
@@ -40,4 +41,13 @@ interface BookmarkDao {
 
     @Insert(onConflict = REPLACE)
     suspend fun insertOrReplaceBookmarkEntity(bookmark: BookmarkEntity): Long
+
+    @Query(
+        value = """
+            UPDATE bookmarks 
+            SET deleted_date = :deletedDate, collection_id = NULL
+            WHERE bookmarks.id = :id
+        """
+    )
+    suspend fun moveBookmarkEntityToTrash(id: Long, deletedDate: Date)
 }

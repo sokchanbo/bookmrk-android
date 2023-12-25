@@ -26,6 +26,8 @@ interface BookmarksRepository {
     ): Flow<List<Bookmark>>
 
     suspend fun createBookmark(url: String, collectionId: Long?)
+
+    suspend fun moveBookmarksToTrash(bookmarks: List<Bookmark>)
 }
 
 class BookmarksRepositoryImpl @Inject constructor(
@@ -42,10 +44,12 @@ class BookmarksRepositoryImpl @Inject constructor(
                 bookmarkDao.getBookmarkEntities()
                     .map { it.map(BookmarkWithCollection::asExternalModel) }
             }
+
             HomeScreenClickType.Unsorted -> {
                 bookmarkDao.getBookmarkEntitiesWithEmptyCollection()
                     .map { it.map(BookmarkEntity::asExternalModel) }
             }
+
             HomeScreenClickType.Collection -> {
                 bookmarkDao.getBookmarkEntitiesByCollectionId(collectionId!!)
                     .map { it.map(BookmarkEntity::asExternalModel) }
@@ -63,6 +67,15 @@ class BookmarksRepositoryImpl @Inject constructor(
                 createdDate = Date()
             )
         )
+    }
+
+    override suspend fun moveBookmarksToTrash(bookmarks: List<Bookmark>) {
+        for (bookmark in bookmarks) {
+            bookmarkDao.moveBookmarkEntityToTrash(
+                id = bookmark.id,
+                deletedDate = Date()
+            )
+        }
     }
 
     private suspend fun extractWebContentFromUrl(url: String): WebContent =

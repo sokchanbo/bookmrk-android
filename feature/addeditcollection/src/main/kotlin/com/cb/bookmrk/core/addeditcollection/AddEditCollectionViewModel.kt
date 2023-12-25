@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.cb.bookmrk.core.addeditcollection.navigation.AddEditCollectionArgs
 import com.cb.bookmrk.core.data.repository.CollectionsRepository
 import com.cb.bookmrk.core.data.repository.GroupsRepository
+import com.cb.bookmrk.core.domain.DeleteCollectionUseCase
 import com.cb.bookmrk.core.model.data.Collection
 import com.cb.bookmrk.core.model.data.Group
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,8 +20,9 @@ import javax.inject.Inject
 @HiltViewModel
 internal class AddEditCollectionViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    groupsRepository: GroupsRepository,
     private val collectionsRepository: CollectionsRepository,
-    groupsRepository: GroupsRepository
+    private val deleteCollectionUseCase: DeleteCollectionUseCase
 ) : ViewModel() {
 
     val addEditCollectionArgs = AddEditCollectionArgs(savedStateHandle)
@@ -61,6 +63,12 @@ internal class AddEditCollectionViewModel @Inject constructor(
                 name = name,
                 groupId = groupId
             )
+        }
+    }
+
+    fun deleteCollection() {
+        viewModelScope.launch {
+            deleteCollectionUseCase(addEditCollectionArgs.collectionId!!)
         }
     }
 }

@@ -25,14 +25,16 @@ fun NavController.navigateToAddEditCollection(
 
 fun NavGraphBuilder.addEditCollectionScreen(
     onNavigationClick: () -> Unit,
-    onCreatedUpdatedSuccess: () -> Unit
+    onCreatedUpdatedSuccess: () -> Unit,
+    onDeletedSuccess: () -> Unit,
 ) {
     composable(
         "$addEditCollectionNavigationRoute?$groupIdArg={$groupIdArg}&$collectionIdArg={$collectionIdArg}"
     ) {
         AddEditCollectionRoute(
             onNavigationClick = onNavigationClick,
-            onCreatedUpdatedSuccess = onCreatedUpdatedSuccess
+            onCreatedUpdatedSuccess = onCreatedUpdatedSuccess,
+            onDeletedSuccess = onDeletedSuccess
         )
     }
 }

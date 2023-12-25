@@ -4,4 +4,6 @@
     <string name="unsorted">Unsorted</string>
     <string name="collection">Collection</string>
     <string name="save_changes">Save changes</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
 </resources>
