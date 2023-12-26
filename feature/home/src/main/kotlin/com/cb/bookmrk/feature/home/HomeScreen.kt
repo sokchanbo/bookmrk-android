@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Cloud
+import androidx.compose.material.icons.outlined.DeleteSweep
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.Sort
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -16,8 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.cb.bookmrk.core.designsystem.component.BookmrkTopAppBar
-import com.cb.bookmrk.core.model.data.Group
 import com.cb.bookmrk.core.model.data.HomeScreenClickType
+import com.cb.bookmrk.core.model.data.HomeScreenData
 import com.cb.bookmrk.core.ui.CollectionRow
 import com.cb.bookmrk.core.ui.GroupRow
 import com.cb.bookmrk.core.ui.R as uiR
@@ -30,11 +31,11 @@ internal fun HomeRoute(
     onCollectionClick: (HomeScreenClickType, collectionId: Long?) -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
-    val groups by viewModel.groups.collectAsState()
+    val data by viewModel.homeScreenData.collectAsState()
 
     HomeScreen(
         modifier = modifier,
-        groups = groups,
+        data = data,
         onAddGroupClick = onAddGroupClick,
         onEditClick = onEditClick,
         onCollectionClick = onCollectionClick
@@ -45,7 +46,7 @@ internal fun HomeRoute(
 @Composable
 internal fun HomeScreen(
     modifier: Modifier = Modifier,
-    groups: List<Group>,
+    data: HomeScreenData?,
     onAddGroupClick: (groupId: Long) -> Unit,
     onEditClick: (groupId: Long) -> Unit,
     onCollectionClick: (HomeScreenClickType, collectionId: Long?) -> Unit
@@ -59,39 +60,55 @@ internal fun HomeScreen(
         modifier = modifier.fillMaxSize()
     ) {
         BookmrkTopAppBar(text = "Bookmrk")
-        LazyColumn {
-            item {
-                CollectionRow(
-                    icon = Icons.Outlined.Cloud,
-                    text = stringResource(uiR.string.all_bookmarks),
-                    onClick = { onCollectionClick(HomeScreenClickType.AllBookmarks, null) }
-                )
-            }
-            item {
-                CollectionRow(
-                    icon = Icons.Outlined.Sort,
-                    text = stringResource(uiR.string.unsorted),
-                    onClick = { onCollectionClick(HomeScreenClickType.Unsorted, null) }
-                )
-            }
-
-            for (i in groups.indices) {
+        if (data != null) {
+            LazyColumn {
                 item {
-                    GroupRow(
-                        group = groups[i],
-                        onAddClick = onAddGroupClick,
-                        onEditClick = onEditClick
+                    CollectionRow(
+                        icon = Icons.Outlined.Cloud,
+                        text = stringResource(uiR.string.all_bookmarks),
+                        itemCount = data.allBookmarkCount,
+                        onClick = { onCollectionClick(HomeScreenClickType.AllBookmarks, null) }
+                    )
+                }
+                item {
+                    CollectionRow(
+                        icon = Icons.Outlined.Sort,
+                        text = stringResource(uiR.string.unsorted),
+                        itemCount = data.unsortedBookmarkCount,
+                        onClick = { onCollectionClick(HomeScreenClickType.Unsorted, null) }
                     )
                 }
 
-                items(groups[i].collections) { collection ->
-                    CollectionRow(
-                        icon = Icons.Outlined.Folder,
-                        text = collection.name,
-                        onClick = {
-                            onCollectionClick(HomeScreenClickType.Collection, collection.id)
-                        }
-                    )
+                if (data.trashBookmarkCount > 0) {
+                    item {
+                        CollectionRow(
+                            icon = Icons.Outlined.DeleteSweep,
+                            text = stringResource(uiR.string.trash),
+                            itemCount = data.trashBookmarkCount,
+                            onClick = { }
+                        )
+                    }
+                }
+
+                for (i in data.groups.indices) {
+                    item {
+                        GroupRow(
+                            group = data.groups[i],
+                            onAddClick = onAddGroupClick,
+                            onEditClick = onEditClick
+                        )
+                    }
+
+                    items(data.groups[i].collections) { collection ->
+                        CollectionRow(
+                            icon = Icons.Outlined.Folder,
+                            text = collection.name,
+                            itemCount = collection.bookmarkCount,
+                            onClick = {
+                                onCollectionClick(HomeScreenClickType.Collection, collection.id)
+                            }
+                        )
+                    }
                 }
             }
         }

@@ -28,6 +28,14 @@ interface BookmarksRepository {
     suspend fun createBookmark(url: String, collectionId: Long?)
 
     suspend fun moveBookmarksToTrash(bookmarks: List<Bookmark>)
+
+    fun countBookmark(collectionId: Long): Flow<Int>
+
+    fun countAllBookmark(): Flow<Int>
+
+    fun countUnsortedBookmark(): Flow<Int>
+//
+    fun countTrashBookmark(): Flow<Int>
 }
 
 class BookmarksRepositoryImpl @Inject constructor(
@@ -77,6 +85,15 @@ class BookmarksRepositoryImpl @Inject constructor(
             )
         }
     }
+
+    override fun countBookmark(collectionId: Long): Flow<Int> =
+        bookmarkDao.countBookmarkEntity(collectionId)
+
+    override fun countAllBookmark(): Flow<Int> = bookmarkDao.countAllBookmarkEntity()
+
+    override fun countUnsortedBookmark(): Flow<Int> = bookmarkDao.countUnsortedBookmark()
+
+    override fun countTrashBookmark(): Flow<Int> = bookmarkDao.countTrashBookmark()
 
     private suspend fun extractWebContentFromUrl(url: String): WebContent =
         withContext(ioDispatcher) {

@@ -2,8 +2,8 @@ package com.cb.bookmrk.feature.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.cb.bookmrk.core.data.repository.GroupsRepository
-import com.cb.bookmrk.core.model.data.Group
+import com.cb.bookmrk.core.domain.GetHomeScreenDataUseCase
+import com.cb.bookmrk.core.model.data.HomeScreenData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -12,14 +12,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    groupsRepository: GroupsRepository
+    getHomeScreenData: GetHomeScreenDataUseCase
 ) : ViewModel() {
 
-    val groups: StateFlow<List<Group>> =
-        groupsRepository.getGroupsWithCollections()
+    val homeScreenData: StateFlow<HomeScreenData?> =
+        getHomeScreenData()
             .stateIn(
                 viewModelScope,
                 SharingStarted.WhileSubscribed(5_000),
-                emptyList()
+                null
             )
 }

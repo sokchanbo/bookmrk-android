@@ -65,6 +65,7 @@ fun CollectionRow(
 fun CollectionRow(
     icon: ImageVector,
     text: String,
+    itemCount: Int? = null,
     onClick: () -> Unit
 ) {
     Surface(
@@ -83,7 +84,12 @@ fun CollectionRow(
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            Text(text = text)
+            Text(text = text, modifier = Modifier.weight(1f))
+            Text(
+                text = itemCount?.toString().orEmpty(),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                style = MaterialTheme.typography.bodyMedium
+            )
         }
     }
 }

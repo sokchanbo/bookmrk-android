@@ -19,9 +19,46 @@ interface BookmarkDao {
             SELECT * FROM bookmarks
             LEFT JOIN collections 
             ON collections.id = bookmarks.collection_id
+            WHERE deleted_date IS NULL
         """
     )
     fun getBookmarkEntities(): Flow<List<BookmarkWithCollection>>
+
+    @Query(
+        value = """
+            SELECT COUNT(bookmarks.id)
+            FROM bookmarks
+            WHERE bookmarks.collection_id == :collectionId
+        """
+    )
+    fun countBookmarkEntity(collectionId: Long): Flow<Int>
+
+    @Query(
+        value = """
+            SELECT COUNT(bookmarks.id)
+            FROM bookmarks
+            WHERE bookmarks.deleted_date IS NULL
+        """
+    )
+    fun countAllBookmarkEntity(): Flow<Int>
+
+    @Query(
+        value = """
+            SELECT COUNT(bookmarks.id)
+            FROM bookmarks
+            WHERE bookmarks.collection_id IS NULL
+        """
+    )
+    fun countUnsortedBookmark(): Flow<Int>
+
+    @Query(
+        value = """
+            SELECT COUNT(bookmarks.id)
+            FROM bookmarks
+            WHERE bookmarks.deleted_date IS NOT NULL
+        """
+    )
+    fun countTrashBookmark(): Flow<Int>
 
     @Query(
         value = """

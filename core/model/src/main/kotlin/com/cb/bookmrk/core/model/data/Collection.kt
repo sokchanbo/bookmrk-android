@@ -5,5 +5,6 @@ data class Collection(
     val name: String,
     val isPrivate: Boolean,
     val group: Group? = null,
-    val bookmarks: List<Bookmark> = emptyList()
+    val bookmarks: List<Bookmark> = emptyList(),
+    val bookmarkCount: Int? = null
 )
