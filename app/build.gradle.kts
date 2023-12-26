@@ -41,6 +41,7 @@ dependencies {
     implementation(project(":feature:addbookmark"))
     implementation(project(":feature:bookmarks"))
     implementation(project(":feature:editgroup"))
+    implementation(project(":feature:bookmarkdetails"))
 
     implementation(project(":core:designsystem"))
     implementation(project(":core:model"))

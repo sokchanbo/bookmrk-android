@@ -66,7 +66,7 @@ fun BookmarkWithCollection.asExternalModel() = Bookmark(
         Collection(
             id = bookmark.collectionId!!,
             name = it.name,
-            isPrivate = it.isPrivate
+            isPrivate = false
         )
     }
 )

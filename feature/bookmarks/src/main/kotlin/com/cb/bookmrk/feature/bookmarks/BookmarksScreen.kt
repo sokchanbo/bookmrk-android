@@ -58,6 +58,7 @@ internal fun BookmarksRoute(
     onNavigationClick: () -> Unit,
     onSetCollectionId: (Long?) -> Unit,
     onEditCollectionClick: (collectionId: Long) -> Unit,
+    onItemClick: (Bookmark) -> Unit,
     viewModel: BookmarksViewModel = hiltViewModel()
 ) {
     val bookmarks by viewModel.bookmarks.collectAsState()
@@ -74,7 +75,8 @@ internal fun BookmarksRoute(
         onNavigationClick = onNavigationClick,
         bookmarks = bookmarks,
         collection = collection,
-        onEditCollectionClick = onEditCollectionClick
+        onEditCollectionClick = onEditCollectionClick,
+        onItemClick = onItemClick
     )
 }
 
@@ -86,7 +88,8 @@ internal fun BookmarksScreen(
     onNavigationClick: () -> Unit,
     bookmarks: List<Bookmark>,
     collection: Collection?,
-    onEditCollectionClick: (collectionId: Long) -> Unit
+    onEditCollectionClick: (collectionId: Long) -> Unit,
+    onItemClick: (Bookmark) -> Unit
 ) {
 
     val context = LocalContext.current
@@ -127,7 +130,8 @@ internal fun BookmarksScreen(
             items(bookmarks) { bookmark ->
                 BookmarkRow(
                     homeScreenClickType = homeScreenClickType,
-                    bookmark = bookmark
+                    bookmark = bookmark,
+                    onClick = onItemClick
                 )
             }
             item { Spacer(modifier = Modifier.navigationBarsPadding()) }
@@ -138,10 +142,12 @@ internal fun BookmarksScreen(
 @Composable
 private fun BookmarkRow(
     homeScreenClickType: HomeScreenClickType,
-    bookmark: Bookmark
+    bookmark: Bookmark,
+    onClick: (Bookmark) -> Unit
 ) {
     Surface(
-        color = Color.Transparent
+        color = Color.Transparent,
+        onClick = { onClick(bookmark) }
     ) {
         Column {
             Row(

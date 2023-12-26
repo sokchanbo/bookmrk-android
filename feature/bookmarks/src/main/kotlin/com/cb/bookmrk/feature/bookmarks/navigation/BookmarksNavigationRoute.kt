@@ -5,6 +5,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import com.cb.bookmrk.core.model.data.Bookmark
 import com.cb.bookmrk.core.model.data.HomeScreenClickType
 import com.cb.bookmrk.feature.bookmarks.BookmarksRoute
 
@@ -27,7 +28,8 @@ fun NavController.navigateToBookmarks(
 fun NavGraphBuilder.bookmarksScreen(
     onNavigationClick: () -> Unit,
     onSetCollectionId: (Long?) -> Unit,
-    onEditCollectionClick: (collectionId: Long) -> Unit
+    onEditCollectionClick: (collectionId: Long) -> Unit,
+    onItemClick: (Bookmark) -> Unit,
 ) {
     composable(
         "$bookmarksNavigationRoute?$homeScreenClickTypeArg={$homeScreenClickTypeArg}&$collectionIdArg={$collectionIdArg}"
@@ -35,7 +37,8 @@ fun NavGraphBuilder.bookmarksScreen(
         BookmarksRoute(
             onNavigationClick = onNavigationClick,
             onSetCollectionId = onSetCollectionId,
-            onEditCollectionClick = onEditCollectionClick
+            onEditCollectionClick = onEditCollectionClick,
+            onItemClick = onItemClick
         )
     }
 }

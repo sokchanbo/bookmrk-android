@@ -16,9 +16,9 @@ interface BookmarkDao {
     @Transaction
     @Query(
         value = """
-            SELECT * FROM bookmarks
+            SELECT b.*, collections.name FROM bookmarks as b
             LEFT JOIN collections 
-            ON collections.id = bookmarks.collection_id
+            ON collections.id = b.collection_id
             WHERE deleted_date IS NULL
         """
     )
@@ -75,6 +75,14 @@ interface BookmarkDao {
         """
     )
     fun getBookmarkEntitiesByCollectionId(collectionId: Long): Flow<List<BookmarkEntity>>
+
+    @Query(
+        value = """
+            SELECT * FROM bookmarks
+            WHERE bookmarks.id = :id
+        """
+    )
+    fun getBookmarkById(id: Long): Flow<BookmarkEntity>
 
     @Insert(onConflict = REPLACE)
     suspend fun insertOrReplaceBookmarkEntity(bookmark: BookmarkEntity): Long

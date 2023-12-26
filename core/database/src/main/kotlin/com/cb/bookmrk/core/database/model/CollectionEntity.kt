@@ -35,10 +35,10 @@ data class CollectionEntity(
 
 data class EmbeddedCollection(
     val name: String,
-    @ColumnInfo(name = "is_private")
+    /*@ColumnInfo(name = "is_private")
     val isPrivate: Boolean,
     @ColumnInfo(name = "group_id")
-    val groupId: Long,
+    val groupId: Long,*/
 )
 
 data class CollectionWithGroup(

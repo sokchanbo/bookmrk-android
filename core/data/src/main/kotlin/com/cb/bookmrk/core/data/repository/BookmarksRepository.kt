@@ -34,8 +34,10 @@ interface BookmarksRepository {
     fun countAllBookmark(): Flow<Int>
 
     fun countUnsortedBookmark(): Flow<Int>
-//
+
     fun countTrashBookmark(): Flow<Int>
+
+    fun getBookmarkById(id: Long): Flow<Bookmark?>
 }
 
 class BookmarksRepositoryImpl @Inject constructor(
@@ -94,6 +96,9 @@ class BookmarksRepositoryImpl @Inject constructor(
     override fun countUnsortedBookmark(): Flow<Int> = bookmarkDao.countUnsortedBookmark()
 
     override fun countTrashBookmark(): Flow<Int> = bookmarkDao.countTrashBookmark()
+
+    override fun getBookmarkById(id: Long): Flow<Bookmark?> =
+        bookmarkDao.getBookmarkById(id).map { it?.asExternalModel() }
 
     private suspend fun extractWebContentFromUrl(url: String): WebContent =
         withContext(ioDispatcher) {
