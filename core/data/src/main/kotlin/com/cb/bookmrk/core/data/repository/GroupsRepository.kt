@@ -10,6 +10,8 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 interface GroupsRepository {
+
+    suspend fun createGroup(title: String)
     fun getGroupsWithCollections(): Flow<List<Group>>
 
     fun getGroups(): Flow<List<Group>>
@@ -23,6 +25,11 @@ class GroupsRepositoryImpl @Inject constructor(
     private val groupDao: GroupDao
 ) : GroupsRepository {
 
+    override suspend fun createGroup(title: String) {
+        groupDao.insertOrReplaceGroupEntity(
+            GroupEntity(title = title)
+        )
+    }
     override fun getGroupsWithCollections(): Flow<List<Group>> =
         groupDao.getGroupsWithCollections().map {
             it.map(PopulatedGroup::asExternalModel)

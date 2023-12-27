@@ -7,4 +7,6 @@
     <string name="save_changes">Save changes</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
+    <string name="enter_title">Enter title</string>
+    <string name="create_group">Create group</string>
 </resources>

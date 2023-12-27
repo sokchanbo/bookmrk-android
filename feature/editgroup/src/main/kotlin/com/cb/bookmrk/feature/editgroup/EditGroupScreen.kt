@@ -21,17 +21,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.cb.bookmrk.core.designsystem.component.BookmrkButton
 import com.cb.bookmrk.core.designsystem.component.BookmrkOutlinedTextField
 import com.cb.bookmrk.core.designsystem.component.BookmrkTopAppBar
 import com.cb.bookmrk.core.model.data.Group
+import com.cb.bookmrk.core.ui.R as uiR
 
 @Composable
 internal fun EditGroupRoute(
     modifier: Modifier = Modifier,
     onNavigationClick: () -> Unit,
+    onCreateGroupClick: () -> Unit,
     viewModel: EditGroupViewModel = hiltViewModel()
 ) {
     val group by viewModel.group.collectAsState()
@@ -42,7 +45,8 @@ internal fun EditGroupRoute(
             viewModel.updateGroup(title = title)
             onNavigationClick()
         },
-        group = group
+        group = group,
+        onCreateGroupClick = onCreateGroupClick
     )
 }
 
@@ -51,7 +55,8 @@ internal fun EditGroupRoute(
 internal fun EditGroupScreen(
     modifier: Modifier = Modifier,
     onNavigationClick: (String) -> Unit,
-    group: Group?
+    group: Group?,
+    onCreateGroupClick: () -> Unit
 ) {
 
     var title by remember(group?.title) {
@@ -80,7 +85,7 @@ internal fun EditGroupScreen(
                     value = title,
                     onValueChange = { title = it },
                     placeholder = {
-                        Text(text = "Enter title")
+                        Text(text = stringResource(uiR.string.enter_title))
                     }
                 )
 
@@ -89,8 +94,8 @@ internal fun EditGroupScreen(
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     BookmrkButton(
                         modifier = Modifier.fillMaxWidth(),
-                        text = "Create group",
-                        onClick = { },
+                        text = stringResource(uiR.string.create_group),
+                        onClick = onCreateGroupClick,
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.tertiary,
                             contentColor = MaterialTheme.colorScheme.onTertiary,

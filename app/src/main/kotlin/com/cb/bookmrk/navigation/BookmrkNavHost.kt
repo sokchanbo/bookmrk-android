@@ -6,6 +6,8 @@ import androidx.navigation.compose.NavHost
 import com.cb.bookmrk.core.addeditcollection.navigation.addEditCollectionScreen
 import com.cb.bookmrk.core.addeditcollection.navigation.navigateToAddEditCollection
 import com.cb.bookmrk.feature.addbookmark.navigation.addBookmarkScreen
+import com.cb.bookmrk.feature.addgroup.navigation.addGroupScreen
+import com.cb.bookmrk.feature.addgroup.navigation.navigateToAddGroup
 import com.cb.bookmrk.feature.bookmarkdetails.navigation.bookmarkDetailsScreen
 import com.cb.bookmrk.feature.bookmarkdetails.navigation.navigateToBookmarkDetails
 import com.cb.bookmrk.feature.bookmarks.navigation.bookmarksScreen
@@ -63,10 +65,17 @@ fun BookmrkNavHost(
             }
         )
         editGroupScreen(
-            onNavigationClick = navController::popBackStack
+            onNavigationClick = navController::popBackStack,
+            onCreateGroupClick = navController::navigateToAddGroup
         )
         bookmarkDetailsScreen(
             onNavigationClick = navController::popBackStack
+        )
+        addGroupScreen(
+            onNavigationClick = navController::popBackStack,
+            onCreatedGroup = {
+                navController.popBackStack(homeNavigationRoute, false)
+            }
         )
     }
 }
