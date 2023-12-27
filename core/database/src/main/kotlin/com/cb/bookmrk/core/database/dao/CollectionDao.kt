@@ -38,6 +38,15 @@ interface CollectionDao {
     )
     fun getCollectionWithGroupById(id: Long): Flow<CollectionWithGroup?>
 
+    @Query(
+        value = """
+            SELECT COUNT(collections.id) 
+            FROM collections
+            WHERE collections.group_id = :groupId
+        """
+    )
+    fun countCollectionWithinGroup(groupId: Long): Flow<Int>
+
     @Insert(onConflict = REPLACE)
     suspend fun insertOrReplaceCollectionEntity(collection: CollectionEntity): Long
 

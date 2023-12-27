@@ -16,6 +16,8 @@ interface CollectionsRepository {
 
     fun getCollectionWithGroup(collectionId: Long): Flow<Collection?>
 
+    fun countCollectionWithinGroup(groupId: Long): Flow<Int>
+
     suspend fun createCollection(name: String, isPrivate: Boolean, groupId: Long)
 
     suspend fun updateCollection(id: Long, name: String, groupId: Long)
@@ -38,6 +40,9 @@ class CollectionsRepositoryImpl @Inject constructor(
     override fun getCollectionWithGroup(collectionId: Long): Flow<Collection?> =
         collectionDao.getCollectionWithGroupById(collectionId)
             .map { it?.asExternalModel() }
+
+    override fun countCollectionWithinGroup(groupId: Long): Flow<Int> =
+        collectionDao.countCollectionWithinGroup(groupId)
 
     override suspend fun createCollection(name: String, isPrivate: Boolean, groupId: Long) {
         collectionDao.insertOrReplaceCollectionEntity(

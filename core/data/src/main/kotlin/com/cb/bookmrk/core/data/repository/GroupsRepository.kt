@@ -19,6 +19,8 @@ interface GroupsRepository {
     fun getGroup(id: Long): Flow<Group?>
 
     suspend fun updateGroup(id: Long, title: String)
+
+    suspend fun deleteGroup(id: Long)
 }
 
 class GroupsRepositoryImpl @Inject constructor(
@@ -45,5 +47,9 @@ class GroupsRepositoryImpl @Inject constructor(
 
     override suspend fun updateGroup(id: Long, title: String) {
         groupDao.updateGroupEntity(GroupEntity(title = title, id = id))
+    }
+
+    override suspend fun deleteGroup(id: Long) {
+        groupDao.deleteGroupEntity(id)
     }
 }

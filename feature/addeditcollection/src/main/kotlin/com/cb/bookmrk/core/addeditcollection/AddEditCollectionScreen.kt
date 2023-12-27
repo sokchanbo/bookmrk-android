@@ -33,6 +33,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,6 +52,7 @@ import com.cb.bookmrk.core.designsystem.component.BookmrkSelectionOutlinedTextFi
 import com.cb.bookmrk.core.designsystem.component.BookmrkTopAppBar
 import com.cb.bookmrk.core.model.data.Collection
 import com.cb.bookmrk.core.model.data.Group
+import kotlinx.coroutines.launch
 import com.cb.bookmrk.core.ui.R as uiR
 
 @Composable
@@ -95,6 +97,8 @@ internal fun AddEditCollectionScreen(
     onCreateUpdateClick: (collectionName: String, isPrivate: Boolean, groupId: Long?) -> Unit,
     onConfirmDeleteClick: () -> Unit
 ) {
+
+    val scope = rememberCoroutineScope()
 
     val focusRequest = remember { FocusRequester() }
 
@@ -192,7 +196,14 @@ internal fun AddEditCollectionScreen(
                     sheetState = sheetState,
                     onDismissRequest = { showGroupModalBottomSheet = false },
                     groups = groups,
-                    selectedGroup = selectedGroup
+                    selectedGroup = selectedGroup,
+                    onItemClick = {
+                        scope.launch {
+                            selectedGroup = it
+                            sheetState.hide()
+                            showGroupModalBottomSheet = false
+                        }
+                    }
                 )
             }
 
@@ -215,7 +226,8 @@ private fun GroupModalBottomSheet(
     sheetState: SheetState,
     onDismissRequest: () -> Unit,
     groups: List<Group>,
-    selectedGroup: Group?
+    selectedGroup: Group?,
+    onItemClick: (Group) -> Unit
 ) {
     BookmrkModalBottomSheet(
         sheetState = sheetState,
@@ -223,17 +235,21 @@ private fun GroupModalBottomSheet(
     ) {
         LazyColumn {
             items(groups) { group ->
-                GroupRow(group = group, isSelected = group.id == selectedGroup?.id)
+                GroupRow(
+                    group = group,
+                    isSelected = group.id == selectedGroup?.id,
+                    onClick = onItemClick
+                )
             }
         }
     }
 }
 
 @Composable
-private fun GroupRow(group: Group, isSelected: Boolean) {
+private fun GroupRow(group: Group, isSelected: Boolean, onClick: (Group) -> Unit) {
     Surface(
         color = Color.Transparent,
-        onClick = {}
+        onClick = { onClick(group) }
     ) {
         Row(
             modifier = Modifier

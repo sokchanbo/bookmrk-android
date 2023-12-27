@@ -66,7 +66,8 @@ fun BookmrkNavHost(
         )
         editGroupScreen(
             onNavigationClick = navController::popBackStack,
-            onCreateGroupClick = navController::navigateToAddGroup
+            onCreateGroupClick = navController::navigateToAddGroup,
+            onDeletedGroup = navController::popBackStack
         )
         bookmarkDetailsScreen(
             onNavigationClick = navController::popBackStack

@@ -1,6 +1,7 @@
 package com.cb.bookmrk.core.database.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
@@ -40,4 +41,12 @@ interface GroupDao {
 
     @Update
     suspend fun updateGroupEntity(group: GroupEntity)
+
+    @Query(
+        value = """
+            DELETE FROM groups
+            WHERE groups.id = :id
+        """
+    )
+    suspend fun deleteGroupEntity(id: Long)
 }

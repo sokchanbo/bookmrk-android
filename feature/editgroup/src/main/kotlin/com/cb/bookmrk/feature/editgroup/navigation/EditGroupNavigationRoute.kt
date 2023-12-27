@@ -17,14 +17,16 @@ fun NavController.navigateToEditGroup(groupId: Long, navOptions: NavOptions? = n
 
 fun NavGraphBuilder.editGroupScreen(
     onNavigationClick: () -> Unit,
-    onCreateGroupClick: () -> Unit
+    onCreateGroupClick: () -> Unit,
+    onDeletedGroup: () -> Unit,
 ) {
     composable(
         "$editGroupNavigationRoute/{$groupIdArg}"
     ) {
         EditGroupRoute(
             onNavigationClick = onNavigationClick,
-            onCreateGroupClick = onCreateGroupClick
+            onCreateGroupClick = onCreateGroupClick,
+            onDeletedGroup = onDeletedGroup
         )
     }
 }

@@ -101,6 +101,7 @@ internal fun BookmarksScreen(
             ?: when (homeScreenClickType) {
                 HomeScreenClickType.AllBookmarks -> context.getString(uiR.string.all_bookmarks)
                 HomeScreenClickType.Unsorted -> context.getString(uiR.string.unsorted)
+                HomeScreenClickType.Trash -> context.getString(uiR.string.trash)
                 HomeScreenClickType.Collection -> ""
             }
     }
@@ -175,7 +176,6 @@ private fun BookmarkRow(
                                 text = bookmark.collection!!.name
                             )
                         } else {
-
                             IconText(
                                 icon = Icons.Outlined.Inbox,
                                 text = stringResource(uiR.string.unsorted)

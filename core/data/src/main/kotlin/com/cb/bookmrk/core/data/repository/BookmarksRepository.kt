@@ -64,6 +64,11 @@ class BookmarksRepositoryImpl @Inject constructor(
                 bookmarkDao.getBookmarkEntitiesByCollectionId(collectionId!!)
                     .map { it.map(BookmarkEntity::asExternalModel) }
             }
+
+            HomeScreenClickType.Trash -> {
+                bookmarkDao.getTrashBookmarkEntities()
+                    .map { it.map(BookmarkWithCollection::asExternalModel) }
+            }
         }
 
     override suspend fun createBookmark(url: String, collectionId: Long?) {

@@ -85,7 +85,7 @@ internal fun HomeScreen(
                             icon = Icons.Outlined.DeleteSweep,
                             text = stringResource(uiR.string.trash),
                             itemCount = data.trashBookmarkCount,
-                            onClick = { }
+                            onClick = { onCollectionClick(HomeScreenClickType.Trash, null) }
                         )
                     }
                 }

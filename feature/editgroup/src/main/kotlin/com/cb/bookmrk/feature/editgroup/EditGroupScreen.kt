@@ -12,6 +12,7 @@ import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -35,9 +36,12 @@ internal fun EditGroupRoute(
     modifier: Modifier = Modifier,
     onNavigationClick: () -> Unit,
     onCreateGroupClick: () -> Unit,
+    onDeletedGroup: () -> Unit,
     viewModel: EditGroupViewModel = hiltViewModel()
 ) {
     val group by viewModel.group.collectAsState()
+    val collectionCount by viewModel.collectionCount.collectAsState()
+    val showDeleteGroupError by viewModel.showDeleteGroupError.collectAsState()
 
     EditGroupScreen(
         modifier = modifier,
@@ -46,7 +50,14 @@ internal fun EditGroupRoute(
             onNavigationClick()
         },
         group = group,
-        onCreateGroupClick = onCreateGroupClick
+        showDeleteGroupError = showDeleteGroupError,
+        onCreateGroupClick = onCreateGroupClick,
+        onRemoveGroupClick = {
+            viewModel.removeGroup()
+            if (collectionCount <= 0) {
+                onDeletedGroup()
+            }
+        }
     )
 }
 
@@ -56,7 +67,9 @@ internal fun EditGroupScreen(
     modifier: Modifier = Modifier,
     onNavigationClick: (String) -> Unit,
     group: Group?,
-    onCreateGroupClick: () -> Unit
+    showDeleteGroupError: Boolean,
+    onCreateGroupClick: () -> Unit,
+    onRemoveGroupClick: () -> Unit
 ) {
 
     var title by remember(group?.title) {
@@ -101,18 +114,36 @@ internal fun EditGroupScreen(
                             contentColor = MaterialTheme.colorScheme.onTertiary,
                         )
                     )
-
                     TextButton(
                         modifier = Modifier.fillMaxWidth(),
-                        onClick = {},
+                        onClick = onRemoveGroupClick,
                         colors = ButtonDefaults.textButtonColors(
                             contentColor = MaterialTheme.colorScheme.error
                         )
                     ) {
-                        Text(text = "Remove group")
+                        Text(text = stringResource(R.string.remove_group))
                     }
+                }
+
+                if (showDeleteGroupError) {
+                    ErrorMessage(text = stringResource(R.string.remove_group_error_message))
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun ErrorMessage(text: String) {
+    Surface(
+        color = MaterialTheme.colorScheme.errorContainer,
+        contentColor = MaterialTheme.colorScheme.onErrorContainer,
+        shape = MaterialTheme.shapes.medium
+    ) {
+        Text(
+            text = text,
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+            style = MaterialTheme.typography.labelMedium
+        )
     }
 }
