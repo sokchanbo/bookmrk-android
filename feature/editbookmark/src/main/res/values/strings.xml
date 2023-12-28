@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="move_to_trash">Move to trash</string>
+    <string name="remove_from_trash">Remove from trash</string>
+</resources>

@@ -83,7 +83,8 @@ fun BookmrkNavHost(
         )
         editBookmarkScreen(
             onNavigationClick = navController::popBackStack,
-            onUpdatedBookmark = navController::popBackStack
+            onUpdatedBookmark = navController::popBackStack,
+            onMovedToTrash = navController::popBackStack
         )
     }
 }

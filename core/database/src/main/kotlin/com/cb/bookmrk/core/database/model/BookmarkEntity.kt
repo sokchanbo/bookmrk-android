@@ -59,6 +59,7 @@ fun BookmarkEntity.asExternalModel() = Bookmark(
     description = description,
     note = note,
     createdDate = createdDate,
+    deletedDate = deletedDate,
     collection = null
 )
 
@@ -70,6 +71,7 @@ fun BookmarkWithCollection.asExternalModel() = Bookmark(
     description = bookmark.description,
     note = bookmark.note,
     createdDate = bookmark.createdDate,
+    deletedDate = bookmark.deletedDate,
     collection = collection?.let {
         Collection(
             id = bookmark.collectionId!!,

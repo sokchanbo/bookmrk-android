@@ -1,5 +1,6 @@
 package com.cb.bookmrk.feature.bookmarks
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Folder
@@ -132,7 +134,7 @@ internal fun BookmarksScreen(
                 .weight(1f)
                 .nestedScroll(scrollBehavior.nestedScrollConnection)
         ) {
-            items(bookmarks) { bookmark ->
+            items(bookmarks, key = { it.uuid }) { bookmark ->
                 BookmarkRow(
                     homeScreenClickType = homeScreenClickType,
                     bookmark = bookmark,
@@ -145,14 +147,16 @@ internal fun BookmarksScreen(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun BookmarkRow(
+private fun LazyItemScope.BookmarkRow(
     homeScreenClickType: HomeScreenClickType,
     bookmark: Bookmark,
     onClick: (Bookmark) -> Unit,
     onMenuClick: (Long) -> Unit
 ) {
     Surface(
+        modifier = Modifier.animateItemPlacement(),
         color = Color.Transparent,
         onClick = { onClick(bookmark) }
     ) {

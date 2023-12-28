@@ -43,4 +43,16 @@ internal class EditBookmarkViewModel @Inject constructor(
             bookmarksRepository.updateBookmark(updateBookmark)
         }
     }
+
+    fun moveToTrash() {
+        viewModelScope.launch {
+            bookmarksRepository.moveBookmarkToTrash(editBookmarkArgs.bookmarkId)
+        }
+    }
+
+    fun removeFromTrash() {
+        viewModelScope.launch {
+            bookmarksRepository.deleteBookmark(editBookmarkArgs.bookmarkId)
+        }
+    }
 }

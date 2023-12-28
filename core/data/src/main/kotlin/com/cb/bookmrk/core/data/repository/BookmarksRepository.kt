@@ -33,6 +33,8 @@ interface BookmarksRepository {
 
     suspend fun moveBookmarksToTrash(bookmarks: List<Bookmark>)
 
+    suspend fun moveBookmarkToTrash(id: Long)
+
     fun countBookmark(collectionId: Long): Flow<Int>
 
     fun countAllBookmark(): Flow<Int>
@@ -44,6 +46,8 @@ interface BookmarksRepository {
     fun getBookmarkById(id: Long): Flow<Bookmark?>
 
     fun getBookmarkWithCollection(id: Long): Flow<Bookmark?>
+
+    suspend fun deleteBookmark(id: Long)
 
 }
 
@@ -121,6 +125,13 @@ class BookmarksRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun moveBookmarkToTrash(id: Long) {
+        bookmarkDao.moveBookmarkEntityToTrash(
+            id = id,
+            deletedDate = Date()
+        )
+    }
+
     override fun countBookmark(collectionId: Long): Flow<Int> =
         bookmarkDao.countBookmarkEntity(collectionId)
 
@@ -136,6 +147,10 @@ class BookmarksRepositoryImpl @Inject constructor(
     override fun getBookmarkWithCollection(id: Long): Flow<Bookmark?> =
         bookmarkDao.getBookmarkWithCollection(id)
             .map { it?.asExternalModel() }
+
+    override suspend fun deleteBookmark(id: Long) {
+        bookmarkDao.deleteBookmarkEntity(id)
+    }
 
     private suspend fun extractWebContentFromUrl(url: String): WebContent =
         withContext(ioDispatcher) {

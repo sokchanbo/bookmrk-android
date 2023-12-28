@@ -23,10 +23,14 @@ import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
@@ -62,6 +66,7 @@ internal fun EditBookmarkRoute(
     modifier: Modifier = Modifier,
     onNavigationClick: () -> Unit,
     onUpdatedBookmark: () -> Unit,
+    onMovedToTrash: () -> Unit,
     viewModel: EditBookmarkViewModel = hiltViewModel()
 ) {
     val bookmark by viewModel.bookmark.collectAsState()
@@ -76,6 +81,14 @@ internal fun EditBookmarkRoute(
             viewModel.updateBookmark(it)
             onUpdatedBookmark()
         },
+        onMoveToTrashClick = {
+            if (bookmark?.deletedDate != null) {
+                viewModel.removeFromTrash()
+            } else {
+                viewModel.moveToTrash()
+            }
+            onMovedToTrash()
+        }
     )
 }
 
@@ -87,6 +100,7 @@ internal fun EditBookmarkScreen(
     bookmark: Bookmark?,
     groups: List<Group>,
     onSaveChangesClick: (UpdateBookmark) -> Unit,
+    onMoveToTrashClick: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
@@ -128,15 +142,15 @@ internal fun EditBookmarkScreen(
             navigationIcon = Icons.Rounded.ArrowBack,
             onNavigationClick = onNavigationClick,
             actions = {
-                IconButton(onClick = {}) {
+                IconButton(
+                    onClick = {
+                    },
+                    colors = IconButtonDefaults.iconButtonColors(
+                        contentColor = MaterialTheme.colorScheme.primary
+                    )
+                ) {
                     Icon(
                         imageVector = Icons.Outlined.FavoriteBorder,
-                        contentDescription = null
-                    )
-                }
-                IconButton(onClick = {}) {
-                    Icon(
-                        imageVector = Icons.Outlined.DeleteOutline,
                         contentDescription = null
                     )
                 }
@@ -223,6 +237,33 @@ internal fun EditBookmarkScreen(
                         },
                         placeholder = "Choose collection (Optional)"
                     )
+
+                    FilledTonalButton(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(OutlinedTextFieldDefaults.MinHeight),
+                        onClick = onMoveToTrashClick,
+                        shape = MaterialTheme.shapes.large,
+                        colors = ButtonDefaults.filledTonalButtonColors(
+                            containerColor = MaterialTheme.colorScheme.errorContainer,
+                            contentColor = MaterialTheme.colorScheme.onErrorContainer
+                        )
+                    ) {
+                        Icon(imageVector = Icons.Outlined.DeleteOutline, contentDescription = null)
+                        Text(
+                            text = stringResource(
+                                if (bookmark.deletedDate == null) {
+                                    R.string.move_to_trash
+                                } else {
+                                    R.string.remove_from_trash
+                                }
+                            ),
+                            modifier = Modifier.padding(start = 8.dp)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
                     if (showChooseCollectionBottomSheet) {
                         ChooseCollectionModalBottomSheet(
                             sheetState = sheetState,

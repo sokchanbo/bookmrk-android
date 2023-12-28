@@ -18,11 +18,13 @@ fun NavController.navigateToEditBookmark(bookmarkId: Long, navOptions: NavOption
 fun NavGraphBuilder.editBookmarkScreen(
     onNavigationClick: () -> Unit,
     onUpdatedBookmark: () -> Unit,
+    onMovedToTrash: () -> Unit
 ) {
     composable("$editBookmarkNavigationRoute/{$bookmarkIdArg}") {
         EditBookmarkRoute(
             onNavigationClick = onNavigationClick,
-            onUpdatedBookmark = onUpdatedBookmark
+            onUpdatedBookmark = onUpdatedBookmark,
+            onMovedToTrash = onMovedToTrash
         )
     }
 }

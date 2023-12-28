@@ -121,4 +121,12 @@ interface BookmarkDao {
         """
     )
     suspend fun moveBookmarkEntityToTrash(id: Long, deletedDate: Date)
+
+    @Query(
+        value = """
+            DELETE FROM bookmarks
+            WHERE bookmarks.id = :id
+        """
+    )
+    suspend fun deleteBookmarkEntity(id: Long)
 }
