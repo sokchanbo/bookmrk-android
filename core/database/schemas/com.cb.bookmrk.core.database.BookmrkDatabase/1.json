@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "ed178351f67192c985f9576bbd090a60",
+    "identityHash": "32a19c2d8f57490455c176464be9c03a",
     "entities": [
       {
         "tableName": "groups",
@@ -92,7 +92,7 @@
       },
       {
         "tableName": "bookmarks",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`title` TEXT NOT NULL, `image_url` TEXT NOT NULL, `link` TEXT NOT NULL, `created_date` INTEGER NOT NULL, `collection_id` INTEGER, `deleted_date` INTEGER, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, FOREIGN KEY(`collection_id`) REFERENCES `collections`(`id`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`title` TEXT NOT NULL, `image_url` TEXT NOT NULL, `link` TEXT NOT NULL, `description` TEXT, `note` TEXT, `is_added_to_favorite` INTEGER NOT NULL, `created_date` INTEGER NOT NULL, `collection_id` INTEGER, `deleted_date` INTEGER, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, FOREIGN KEY(`collection_id`) REFERENCES `collections`(`id`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "title",
@@ -110,6 +110,24 @@
             "fieldPath": "link",
             "columnName": "link",
             "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "note",
+            "columnName": "note",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isAddedToFavorite",
+            "columnName": "is_added_to_favorite",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -172,7 +190,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ed178351f67192c985f9576bbd090a60')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '32a19c2d8f57490455c176464be9c03a')"
     ]
   }
 }

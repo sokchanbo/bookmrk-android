@@ -30,6 +30,7 @@ fun NavGraphBuilder.bookmarksScreen(
     onSetCollectionId: (Long?) -> Unit,
     onEditCollectionClick: (collectionId: Long) -> Unit,
     onItemClick: (Bookmark) -> Unit,
+    onMenuClick: (bookmarkId: Long) -> Unit
 ) {
     composable(
         "$bookmarksNavigationRoute?$homeScreenClickTypeArg={$homeScreenClickTypeArg}&$collectionIdArg={$collectionIdArg}"
@@ -38,7 +39,8 @@ fun NavGraphBuilder.bookmarksScreen(
             onNavigationClick = onNavigationClick,
             onSetCollectionId = onSetCollectionId,
             onEditCollectionClick = onEditCollectionClick,
-            onItemClick = onItemClick
+            onItemClick = onItemClick,
+            onMenuClick = onMenuClick
         )
     }
 }

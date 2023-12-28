@@ -2,6 +2,7 @@ package com.cb.bookmrk.feature.bookmarks
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -59,6 +60,7 @@ internal fun BookmarksRoute(
     onSetCollectionId: (Long?) -> Unit,
     onEditCollectionClick: (collectionId: Long) -> Unit,
     onItemClick: (Bookmark) -> Unit,
+    onMenuClick: (Long) -> Unit,
     viewModel: BookmarksViewModel = hiltViewModel()
 ) {
     val bookmarks by viewModel.bookmarks.collectAsState()
@@ -76,7 +78,8 @@ internal fun BookmarksRoute(
         bookmarks = bookmarks,
         collection = collection,
         onEditCollectionClick = onEditCollectionClick,
-        onItemClick = onItemClick
+        onItemClick = onItemClick,
+        onMenuClick = onMenuClick
     )
 }
 
@@ -89,7 +92,8 @@ internal fun BookmarksScreen(
     bookmarks: List<Bookmark>,
     collection: Collection?,
     onEditCollectionClick: (collectionId: Long) -> Unit,
-    onItemClick: (Bookmark) -> Unit
+    onItemClick: (Bookmark) -> Unit,
+    onMenuClick: (Long) -> Unit,
 ) {
 
     val context = LocalContext.current
@@ -132,7 +136,8 @@ internal fun BookmarksScreen(
                 BookmarkRow(
                     homeScreenClickType = homeScreenClickType,
                     bookmark = bookmark,
-                    onClick = onItemClick
+                    onClick = onItemClick,
+                    onMenuClick = onMenuClick
                 )
             }
             item { Spacer(modifier = Modifier.navigationBarsPadding()) }
@@ -144,7 +149,8 @@ internal fun BookmarksScreen(
 private fun BookmarkRow(
     homeScreenClickType: HomeScreenClickType,
     bookmark: Bookmark,
-    onClick: (Bookmark) -> Unit
+    onClick: (Bookmark) -> Unit,
+    onMenuClick: (Long) -> Unit
 ) {
     Surface(
         color = Color.Transparent,
@@ -155,15 +161,30 @@ private fun BookmarkRow(
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Image(
-                    painter = rememberAsyncImagePainter(bookmark.imageUrl),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(64.dp)
-                        .clip(MaterialTheme.shapes.large),
-                )
+                Box(modifier = Modifier.padding(top = 12.dp)) {
+                    Image(
+                        painter = rememberAsyncImagePainter(bookmark.imageUrl),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(64.dp)
+                            .clip(MaterialTheme.shapes.large),
+                    )
+                }
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text(text = bookmark.title)
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.Top
+                    ) {
+                        Text(
+                            text = bookmark.title,
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(top = 12.dp)
+                        )
+                        IconButton(onClick = { onMenuClick(bookmark.id) }) {
+                            Icon(imageVector = Icons.Rounded.MoreHoriz, contentDescription = null)
+                        }
+                    }
                     Text(
                         text = bookmark.link,
                         style = MaterialTheme.typography.labelMedium,
@@ -191,6 +212,7 @@ private fun BookmarkRow(
                     )
                 }
             }
+            Spacer(modifier = Modifier.height(8.dp))
             Divider()
         }
     }

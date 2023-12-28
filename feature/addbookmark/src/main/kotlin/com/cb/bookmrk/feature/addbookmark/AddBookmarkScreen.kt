@@ -9,17 +9,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.DriveFolderUpload
 import androidx.compose.material.icons.rounded.AddLink
 import androidx.compose.material.icons.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.Folder
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -37,16 +33,15 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.cb.bookmrk.core.designsystem.component.BookmrkButton
-import com.cb.bookmrk.core.designsystem.component.BookmrkModalBottomSheet
 import com.cb.bookmrk.core.designsystem.component.BookmrkOutlinedTextField
 import com.cb.bookmrk.core.designsystem.component.BookmrkSelectionOutlinedTextField
 import com.cb.bookmrk.core.designsystem.component.BookmrkTopAppBar
 import com.cb.bookmrk.core.designsystem.component.CircularProgressDialog
 import com.cb.bookmrk.core.model.data.Collection
 import com.cb.bookmrk.core.model.data.Group
-import com.cb.bookmrk.core.ui.CollectionRow
-import com.cb.bookmrk.core.ui.GroupRow
+import com.cb.bookmrk.core.ui.ChooseCollectionModalBottomSheet
 import kotlinx.coroutines.launch
+import com.cb.bookmrk.core.ui.R as uiR
 
 @Composable
 internal fun AddBookmarkRoute(
@@ -124,7 +119,7 @@ internal fun AddBookmarkScreen(
                 modifier = Modifier.fillMaxWidth(),
                 value = link,
                 onValueChange = { link = it },
-                placeholder = { Text(text = stringResource(R.string.enter_link)) },
+                placeholder = { Text(text = stringResource(uiR.string.enter_link)) },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Uri,
                     imeAction = ImeAction.Done
@@ -180,37 +175,6 @@ internal fun AddBookmarkScreen(
                     },
                     selectedCollection = selectedCollection,
                 )
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun ChooseCollectionModalBottomSheet(
-    sheetState: SheetState = rememberModalBottomSheetState(),
-    onDismissRequest: () -> Unit,
-    groups: List<Group>,
-    onItemClick: (Collection) -> Unit,
-    selectedCollection: Collection?
-) {
-    BookmrkModalBottomSheet(
-        onDismissRequest = onDismissRequest,
-        sheetState = sheetState
-    ) {
-        LazyColumn {
-            for (group in groups) {
-                item {
-                    GroupRow(group = group)
-                }
-                items(group.collections) { collection ->
-                    CollectionRow(
-                        icon = Icons.Rounded.Folder,
-                        text = collection.name,
-                        onClick = { onItemClick(collection) },
-                        isSelected = selectedCollection?.id == collection.id
-                    )
-                }
             }
         }
     }

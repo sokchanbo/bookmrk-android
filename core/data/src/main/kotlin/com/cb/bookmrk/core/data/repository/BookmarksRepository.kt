@@ -8,9 +8,11 @@ import com.cb.bookmrk.core.database.model.BookmarkWithCollection
 import com.cb.bookmrk.core.database.model.asExternalModel
 import com.cb.bookmrk.core.model.data.Bookmark
 import com.cb.bookmrk.core.model.data.HomeScreenClickType
+import com.cb.bookmrk.core.model.data.UpdateBookmark
 import com.cb.bookmrk.core.model.data.WebContent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
@@ -27,6 +29,8 @@ interface BookmarksRepository {
 
     suspend fun createBookmark(url: String, collectionId: Long?)
 
+    suspend fun updateBookmark(updateBookmark: UpdateBookmark)
+
     suspend fun moveBookmarksToTrash(bookmarks: List<Bookmark>)
 
     fun countBookmark(collectionId: Long): Flow<Int>
@@ -38,6 +42,9 @@ interface BookmarksRepository {
     fun countTrashBookmark(): Flow<Int>
 
     fun getBookmarkById(id: Long): Flow<Bookmark?>
+
+    fun getBookmarkWithCollection(id: Long): Flow<Bookmark?>
+
 }
 
 class BookmarksRepositoryImpl @Inject constructor(
@@ -79,9 +86,30 @@ class BookmarksRepositoryImpl @Inject constructor(
                 imageUrl = webContent.iconUrl,
                 collectionId = collectionId,
                 link = webContent.url,
-                createdDate = Date()
+                createdDate = Date(),
+                description = webContent.description
             )
         )
+    }
+
+    override suspend fun updateBookmark(updateBookmark: UpdateBookmark) {
+        val bookmark = bookmarkDao.getBookmarkById(updateBookmark.id).first()
+        if (bookmark != null) {
+            bookmarkDao.updateBookmarkEntity(
+                BookmarkEntity(
+                    id = updateBookmark.id,
+                    title = updateBookmark.title,
+                    imageUrl = bookmark.imageUrl,
+                    link = updateBookmark.link,
+                    description = updateBookmark.description,
+                    note = updateBookmark.note,
+                    isAddedToFavorite = bookmark.isAddedToFavorite,
+                    createdDate = bookmark.createdDate,
+                    collectionId = updateBookmark.collectionId,
+                    deletedDate = bookmark.deletedDate
+                )
+            )
+        }
     }
 
     override suspend fun moveBookmarksToTrash(bookmarks: List<Bookmark>) {
@@ -105,12 +133,20 @@ class BookmarksRepositoryImpl @Inject constructor(
     override fun getBookmarkById(id: Long): Flow<Bookmark?> =
         bookmarkDao.getBookmarkById(id).map { it?.asExternalModel() }
 
+    override fun getBookmarkWithCollection(id: Long): Flow<Bookmark?> =
+        bookmarkDao.getBookmarkWithCollection(id)
+            .map { it?.asExternalModel() }
+
     private suspend fun extractWebContentFromUrl(url: String): WebContent =
         withContext(ioDispatcher) {
 
             val con = Jsoup.connect(url)
             val doc = con.userAgent("Mozilla").get()
-            // val ogTags = doc.select("meta[property^=og:]")
+            val ogTags = doc.select("meta[property^=og:]")
+
+            val description: String? =
+                ogTags.firstOrNull { it.attr("property") == "og:description" }
+                    ?.attr("content")
 
             /*ogTags.forEach { element ->
                 when (element.attr("property")) {
@@ -123,7 +159,8 @@ class BookmarksRepositoryImpl @Inject constructor(
             return@withContext WebContent(
                 title = doc.title(),
                 iconUrl = "https://www.google.com/s2/favicons?domain=${URL(url).host}&sz=128",
-                url = url
+                url = url,
+                description = description
             )
         }
 }

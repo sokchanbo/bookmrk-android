@@ -29,6 +29,10 @@ data class BookmarkEntity(
     @ColumnInfo(name = "image_url")
     val imageUrl: String,
     val link: String,
+    val description: String? = null,
+    val note: String? = null,
+    @ColumnInfo(name = "is_added_to_favorite")
+    val isAddedToFavorite: Boolean = false,
     @ColumnInfo(name = "created_date")
     val createdDate: Date,
     @ColumnInfo(name = "collection_id")
@@ -52,6 +56,8 @@ fun BookmarkEntity.asExternalModel() = Bookmark(
     title = title,
     imageUrl = imageUrl,
     link = link,
+    description = description,
+    note = note,
     createdDate = createdDate,
     collection = null
 )
@@ -61,6 +67,8 @@ fun BookmarkWithCollection.asExternalModel() = Bookmark(
     title = bookmark.title,
     link = bookmark.link,
     imageUrl = bookmark.imageUrl,
+    description = bookmark.description,
+    note = bookmark.note,
     createdDate = bookmark.createdDate,
     collection = collection?.let {
         Collection(

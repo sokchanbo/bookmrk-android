@@ -101,7 +101,8 @@ fun BookmrkOutlinedTextField(
     leadingIcon: @Composable (() -> Unit)? = null,
     isError: Boolean = false,
     helperText: @Composable (() -> Unit)? = null,
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    singleLine: Boolean = true
 ) {
     Column(
         modifier = Modifier.animateContentSize(),
@@ -118,7 +119,8 @@ fun BookmrkOutlinedTextField(
             leadingIcon = leadingIcon,
             isError = isError,
             colors = colors,
-            enabled = enabled
+            enabled = enabled,
+            singleLine = singleLine,
         )
 
         CompositionLocalProvider(

@@ -9,7 +9,7 @@ import com.cb.bookmrk.feature.editgroup.EditGroupRoute
 
 const val editGroupNavigationRoute = "edit_group_route"
 
-const val groupIdArg = "group_id"
+private const val groupIdArg = "group_id"
 
 fun NavController.navigateToEditGroup(groupId: Long, navOptions: NavOptions? = null) {
     navigate("$editGroupNavigationRoute/$groupId", navOptions)

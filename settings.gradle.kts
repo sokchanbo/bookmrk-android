@@ -1,8 +1,5 @@
 @file:Suppress("UnstableApiUsage")
 
-include(":feature:addgroup")
-
-
 pluginManagement {
     includeBuild("build-logic")
     repositories {
@@ -36,3 +33,5 @@ include(":feature:addeditcollection")
 include(":feature:bookmarks")
 include(":feature:editgroup")
 include(":feature:bookmarkdetails")
+include(":feature:addgroup")
+include(":feature:editbookmark")

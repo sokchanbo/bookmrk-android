@@ -12,6 +12,8 @@ import com.cb.bookmrk.feature.bookmarkdetails.navigation.bookmarkDetailsScreen
 import com.cb.bookmrk.feature.bookmarkdetails.navigation.navigateToBookmarkDetails
 import com.cb.bookmrk.feature.bookmarks.navigation.bookmarksScreen
 import com.cb.bookmrk.feature.bookmarks.navigation.navigateToBookmarks
+import com.cb.bookmrk.feature.editbookmark.navigation.editBookmarkScreen
+import com.cb.bookmrk.feature.editbookmark.navigation.navigateToEditBookmark
 import com.cb.bookmrk.feature.editgroup.navigation.editGroupScreen
 import com.cb.bookmrk.feature.editgroup.navigation.navigateToEditGroup
 import com.cb.bookmrk.feature.home.navigation.homeNavigationRoute
@@ -62,7 +64,8 @@ fun BookmrkNavHost(
             },
             onItemClick = {
                 navController.navigateToBookmarkDetails(it.id)
-            }
+            },
+            onMenuClick = navController::navigateToEditBookmark
         )
         editGroupScreen(
             onNavigationClick = navController::popBackStack,
@@ -77,6 +80,10 @@ fun BookmrkNavHost(
             onCreatedGroup = {
                 navController.popBackStack(homeNavigationRoute, false)
             }
+        )
+        editBookmarkScreen(
+            onNavigationClick = navController::popBackStack,
+            onUpdatedBookmark = navController::popBackStack
         )
     }
 }
