@@ -124,9 +124,27 @@ interface BookmarkDao {
 
     @Query(
         value = """
+            UPDATE bookmarks
+            SET is_added_to_favorite = :addToFavorite
+            WHERE bookmarks.id = :id
+        """
+    )
+    suspend fun addToFavorite(id: Long, addToFavorite: Boolean)
+
+    @Query(
+        value = """
             DELETE FROM bookmarks
             WHERE bookmarks.id = :id
         """
     )
     suspend fun deleteBookmarkEntity(id: Long)
+
+    @Query(
+        value = """
+            UPDATE bookmarks 
+            SET deleted_date = NULL
+            WHERE bookmarks.id = :id
+        """
+    )
+    suspend fun restoreBookmarkEntity(id: Long)
 }

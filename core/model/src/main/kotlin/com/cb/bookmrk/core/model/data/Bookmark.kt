@@ -13,6 +13,7 @@ data class Bookmark(
     val createdDate: Date,
     val deletedDate: Date?,
     val collection: Collection?,
+    val addedToFavorite: Boolean,
     val uuid: UUID = UUID.randomUUID()
 )
 

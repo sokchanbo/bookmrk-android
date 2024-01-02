@@ -55,4 +55,16 @@ internal class EditBookmarkViewModel @Inject constructor(
             bookmarksRepository.deleteBookmark(editBookmarkArgs.bookmarkId)
         }
     }
+
+    fun addToFavorite(favorite: Boolean) {
+        viewModelScope.launch {
+            bookmarksRepository.addBookmarkToFavorite(editBookmarkArgs.bookmarkId, favorite)
+        }
+    }
+
+    fun restoreBookmark() {
+        viewModelScope.launch {
+            bookmarksRepository.restoreBookmark(editBookmarkArgs.bookmarkId)
+        }
+    }
 }

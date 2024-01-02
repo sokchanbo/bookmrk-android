@@ -14,6 +14,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ContentCopy
+import androidx.compose.material.icons.outlined.DeleteForever
 import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Edit
@@ -22,6 +23,7 @@ import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,8 +31,10 @@ import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
@@ -88,7 +92,9 @@ internal fun EditBookmarkRoute(
                 viewModel.moveToTrash()
             }
             onMovedToTrash()
-        }
+        },
+        onFavoriteClick = viewModel::addToFavorite,
+        onRestoreClick = viewModel::restoreBookmark
     )
 }
 
@@ -100,7 +106,9 @@ internal fun EditBookmarkScreen(
     bookmark: Bookmark?,
     groups: List<Group>,
     onSaveChangesClick: (UpdateBookmark) -> Unit,
-    onMoveToTrashClick: () -> Unit
+    onMoveToTrashClick: () -> Unit,
+    onFavoriteClick: (Boolean) -> Unit,
+    onRestoreClick: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
@@ -120,6 +128,9 @@ internal fun EditBookmarkScreen(
     var link by remember(bookmark?.link) { mutableStateOf(bookmark?.link.orEmpty()) }
     var selectedCollection by remember(bookmark?.collection) {
         mutableStateOf(bookmark?.collection)
+    }
+    var addedToFavorite by remember(bookmark?.addedToFavorite) {
+        mutableStateOf(bookmark?.addedToFavorite == true)
     }
     var showChooseCollectionBottomSheet by remember { mutableStateOf(false) }
 
@@ -142,15 +153,22 @@ internal fun EditBookmarkScreen(
             navigationIcon = Icons.Rounded.ArrowBack,
             onNavigationClick = onNavigationClick,
             actions = {
-                IconButton(
-                    onClick = {
+                IconToggleButton(
+                    checked = addedToFavorite,
+                    onCheckedChange = {
+                        addedToFavorite = it
+                        onFavoriteClick(it)
                     },
-                    colors = IconButtonDefaults.iconButtonColors(
-                        contentColor = MaterialTheme.colorScheme.primary
+                    colors = IconButtonDefaults.iconToggleButtonColors(
+                        contentColor = MaterialTheme.colorScheme.tertiary
                     )
                 ) {
                     Icon(
-                        imageVector = Icons.Outlined.FavoriteBorder,
+                        imageVector = if (addedToFavorite) {
+                            Icons.Rounded.Favorite
+                        } else {
+                            Icons.Outlined.FavoriteBorder
+                        },
                         contentDescription = null
                     )
                 }
@@ -170,6 +188,13 @@ internal fun EditBookmarkScreen(
                         .verticalScroll(scrollState),
                     verticalArrangement = Arrangement.spacedBy(24.dp)
                 ) {
+
+                    if (bookmark.deletedDate != null) {
+                        MovedToTrashMessage(
+                            onRestoreClick = onRestoreClick
+                        )
+                    }
+
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -317,6 +342,36 @@ internal fun EditBookmarkScreen(
                     },
                     tonalElevation = 6.dp,
                 )
+            }
+        }
+    }
+}
+
+@Composable
+private fun MovedToTrashMessage(
+    onRestoreClick: () -> Unit
+) {
+    Surface(
+        shape = MaterialTheme.shapes.medium,
+        tonalElevation = 10.dp
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.DeleteForever,
+                contentDescription = null,
+                modifier = Modifier.size(20.dp)
+            )
+            Text(
+                text = "Item has been removed.",
+                modifier = Modifier.weight(1f),
+                style = MaterialTheme.typography.labelLarge
+            )
+            TextButton(onClick = onRestoreClick) {
+                Text(text = "Restore", style = MaterialTheme.typography.labelLarge)
             }
         }
     }

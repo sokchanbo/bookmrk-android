@@ -49,6 +49,9 @@ interface BookmarksRepository {
 
     suspend fun deleteBookmark(id: Long)
 
+    suspend fun addBookmarkToFavorite(id: Long, addToFavorite: Boolean)
+    
+    suspend fun restoreBookmark(id: Long)
 }
 
 class BookmarksRepositoryImpl @Inject constructor(
@@ -150,6 +153,14 @@ class BookmarksRepositoryImpl @Inject constructor(
 
     override suspend fun deleteBookmark(id: Long) {
         bookmarkDao.deleteBookmarkEntity(id)
+    }
+
+    override suspend fun addBookmarkToFavorite(id: Long, addToFavorite: Boolean) {
+        bookmarkDao.addToFavorite(id, addToFavorite)
+    }
+
+    override suspend fun restoreBookmark(id: Long) {
+        bookmarkDao.restoreBookmarkEntity(id)
     }
 
     private suspend fun extractWebContentFromUrl(url: String): WebContent =
