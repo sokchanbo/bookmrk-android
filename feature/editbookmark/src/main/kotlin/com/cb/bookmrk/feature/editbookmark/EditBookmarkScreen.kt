@@ -1,5 +1,9 @@
 package com.cb.bookmrk.feature.editbookmark
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context.CLIPBOARD_SERVICE
+import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -50,6 +54,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -110,6 +115,7 @@ internal fun EditBookmarkScreen(
     onFavoriteClick: (Boolean) -> Unit,
     onRestoreClick: () -> Unit
 ) {
+    val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -311,13 +317,32 @@ internal fun EditBookmarkScreen(
                 }
                 BottomAppBar(
                     actions = {
-                        IconButton(onClick = {}) {
+                        IconButton(
+                            onClick = {
+                                val clipboardManager = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+                                clipboardManager.setPrimaryClip(
+                                    ClipData.newPlainText("", bookmark.link)
+                                )
+                            }
+                        ) {
                             Icon(
                                 imageVector = Icons.Outlined.ContentCopy,
                                 contentDescription = null
                             )
                         }
-                        IconButton(onClick = {}) {
+                        IconButton(
+                            onClick = {
+                                val share = Intent.createChooser(
+                                    Intent().apply {
+                                        action = Intent.ACTION_SEND
+                                        putExtra(Intent.EXTRA_TEXT, bookmark.link)
+                                        type = "text/html"
+                                    },
+                                    null
+                                )
+                                context.startActivity(share)
+                            }
+                        ) {
                             Icon(imageVector = Icons.Outlined.Share, contentDescription = null)
                         }
                     },

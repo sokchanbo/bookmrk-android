@@ -18,7 +18,7 @@ interface CollectionsRepository {
 
     fun countCollectionWithinGroup(groupId: Long): Flow<Int>
 
-    suspend fun createCollection(name: String, isPrivate: Boolean, groupId: Long)
+    suspend fun createCollection(name: String, groupId: Long)
 
     suspend fun updateCollection(id: Long, name: String, groupId: Long)
 
@@ -44,9 +44,9 @@ class CollectionsRepositoryImpl @Inject constructor(
     override fun countCollectionWithinGroup(groupId: Long): Flow<Int> =
         collectionDao.countCollectionWithinGroup(groupId)
 
-    override suspend fun createCollection(name: String, isPrivate: Boolean, groupId: Long) {
+    override suspend fun createCollection(name: String, groupId: Long) {
         collectionDao.insertOrReplaceCollectionEntity(
-            CollectionEntity(name = name, isPrivate = isPrivate, groupId = groupId)
+            CollectionEntity(name = name, groupId = groupId)
         )
     }
 
@@ -55,7 +55,6 @@ class CollectionsRepositoryImpl @Inject constructor(
             CollectionEntity(
                 name = name,
                 groupId = groupId,
-                isPrivate = true,
                 id = id
             )
         )

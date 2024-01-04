@@ -25,8 +25,6 @@ import com.cb.bookmrk.core.model.data.Group
 )
 data class CollectionEntity(
     val name: String,
-    @ColumnInfo(name = "is_private")
-    val isPrivate: Boolean,
     @ColumnInfo(name = "group_id")
     val groupId: Long,
     @PrimaryKey(autoGenerate = true)
@@ -50,13 +48,11 @@ data class CollectionWithGroup(
 
 fun CollectionEntity.asExternalModel() = Collection(
     id = id,
-    name = name,
-    isPrivate = isPrivate
+    name = name
 )
 
 fun CollectionWithGroup.asExternalModel() = Collection(
     id = collection.id,
     name = collection.name,
-    isPrivate = collection.isPrivate,
     group = Group(id = collection.groupId, title = group.title)
 )

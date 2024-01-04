@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.Inbox
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.Bookmarks
 import androidx.compose.material.icons.rounded.MoreHoriz
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -128,21 +130,38 @@ internal fun BookmarksScreen(
                 }
             }
         )
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-                .nestedScroll(scrollBehavior.nestedScrollConnection)
-        ) {
-            items(bookmarks, key = { it.uuid }) { bookmark ->
-                BookmarkRow(
-                    homeScreenClickType = homeScreenClickType,
-                    bookmark = bookmark,
-                    onClick = onItemClick,
-                    onMenuClick = onMenuClick
-                )
+        if (bookmarks.isNotEmpty()) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .nestedScroll(scrollBehavior.nestedScrollConnection)
+            ) {
+                items(bookmarks, key = { it.uuid }) { bookmark ->
+                    BookmarkRow(
+                        homeScreenClickType = homeScreenClickType,
+                        bookmark = bookmark,
+                        onClick = onItemClick,
+                        onMenuClick = onMenuClick
+                    )
+                }
+                item { Spacer(modifier = Modifier.navigationBarsPadding()) }
             }
-            item { Spacer(modifier = Modifier.navigationBarsPadding()) }
+        } else {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically)
+            ) {
+                Icon(
+                    imageVector = Icons.Rounded.Bookmarks,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.tertiary,
+                    modifier = Modifier.size(72.dp)
+                )
+                Text(text = "Empty collection")
+                Spacer(modifier = Modifier.fillMaxHeight(0.3f))
+            }
         }
     }
 }

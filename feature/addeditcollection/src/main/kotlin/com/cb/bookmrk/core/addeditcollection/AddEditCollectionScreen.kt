@@ -72,11 +72,11 @@ internal fun AddEditCollectionRoute(
         onNavigationClick = onNavigationClick,
         collection = collection,
         groups = groups,
-        onCreateUpdateClick = { collectionName, isPrivate, groupId ->
+        onCreateUpdateClick = { collectionName, groupId ->
             if (viewModel.addEditCollectionArgs.collectionId != null && groupId != null) {
                 viewModel.updateCollection(collectionName, groupId)
             } else {
-                viewModel.createCollection(collectionName, isPrivate)
+                viewModel.createCollection(collectionName)
             }
             onCreatedUpdatedSuccess()
         },
@@ -94,7 +94,7 @@ internal fun AddEditCollectionScreen(
     onNavigationClick: () -> Unit,
     collection: Collection?,
     groups: List<Group>,
-    onCreateUpdateClick: (collectionName: String, isPrivate: Boolean, groupId: Long?) -> Unit,
+    onCreateUpdateClick: (collectionName: String, groupId: Long?) -> Unit,
     onConfirmDeleteClick: () -> Unit
 ) {
 
@@ -112,7 +112,6 @@ internal fun AddEditCollectionScreen(
             )
         )
     }
-    var isPrivate by remember { mutableStateOf(false) }
 
     var selectedGroup by remember(collection?.group) {
         mutableStateOf(collection?.group)
@@ -164,16 +163,6 @@ internal fun AddEditCollectionScreen(
                     onClick = { showGroupModalBottomSheet = true }
                 )
             }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(text = stringResource(R.string._private))
-                Switch(checked = isPrivate, onCheckedChange = { isPrivate = it })
-            }
 
             Spacer(modifier = Modifier.weight(1f))
             BookmrkButton(
@@ -186,7 +175,7 @@ internal fun AddEditCollectionScreen(
                     }
                 ),
                 onClick = {
-                    onCreateUpdateClick(collectionName.text, isPrivate, selectedGroup?.id)
+                    onCreateUpdateClick(collectionName.text, selectedGroup?.id)
                 },
                 enabled = collectionName.text.isNotBlank()
             )

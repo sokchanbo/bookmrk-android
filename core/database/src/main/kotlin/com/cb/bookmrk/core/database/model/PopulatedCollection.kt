@@ -14,6 +14,5 @@ data class PopulatedCollection(
 fun PopulatedCollection.asExternalModel() = Collection(
     id = entity.id,
     name = entity.name,
-    isPrivate = entity.isPrivate,
     bookmarks = bookmarks.map(BookmarkEntity::asExternalModel)
 )

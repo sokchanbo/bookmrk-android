@@ -46,11 +46,10 @@ internal class AddEditCollectionViewModel @Inject constructor(
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
 
-    fun createCollection(name: String, isPrivate: Boolean) {
+    fun createCollection(name: String) {
         viewModelScope.launch {
             collectionsRepository.createCollection(
                 name = name,
-                isPrivate = isPrivate,
                 groupId = addEditCollectionArgs.groupId!!
             )
         }
